@@ -1,23 +1,52 @@
-import dayjs from 'dayjs';
-import { ButtonComponent } from 'components/Button/Button.tsx';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { Stack } from '@mui/material';
+import { Dayjs } from 'dayjs';
+import { styled } from 'styled-components';
+import { FC } from 'react';
 
-const Header = () => {
-  const startDayOfWeek = dayjs().startOf('month').format('MMMM YYYY');
+const ButtonWrapper = styled.button`
+  border: unset;
+  height: 20px;
+  font-weight: bold;
+  border-radius: 4px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  outline: unset;
+  padding: 0;
+  margin: 0;
+`;
+
+const CurrentMonthButton = styled(ButtonWrapper)`
+  padding: 0 8px;
+`;
+
+interface HeaderProps {
+  prevMonthHandler: () => void;
+  nextMonthHandler: () => void;
+  currentMonthHandler: () => void;
+  today: Dayjs;
+}
+
+export const Header: FC<HeaderProps> = ({
+  currentMonthHandler,
+  nextMonthHandler,
+  prevMonthHandler,
+  today,
+}) => {
+  const startDayOfWeek = today.clone().startOf('month').format('MMMM YYYY');
 
   return (
-    <Stack direction="row" alignItems="center" mt={1.5} mb={1.5}>
-      <ButtonComponent color={'inherit'} onClick={() => {}}>
-        <ChevronLeftIcon />
-      </ButtonComponent>
-      <h2>{startDayOfWeek}</h2>
-      <ButtonComponent color={'inherit'} onClick={() => {}}>
-        <ChevronRightIcon />
-      </ButtonComponent>
-    </Stack>
+    <div
+      style={{
+        background: '#efebe9',
+        display: 'flex',
+        alignItems: 'center',
+        padding: '15px 0',
+        borderStartStartRadius: 7,
+        borderStartEndRadius: 7,
+      }}>
+      <ButtonWrapper onClick={prevMonthHandler}>&#60;</ButtonWrapper>
+      <CurrentMonthButton onClick={currentMonthHandler}>{startDayOfWeek}</CurrentMonthButton>
+      <ButtonWrapper onClick={nextMonthHandler}>&#62;</ButtonWrapper>
+    </div>
   );
 };
-
-export default Header;
