@@ -12,23 +12,31 @@ export const GridWrapper = styled.div<{
   padding: ${({ $isHeader }) => ($isHeader ? '' : 1)};
   border-bottom-left-radius: 7px;
   border-bottom-right-radius: 7px;
+  font-size: 18px;
+  font-weight: 500;
+  font-style: italic;
 `;
 
 export const Cells = styled.div<{
   $isWeekend?: boolean;
   $isCurrentDay?: boolean;
   $isHeader?: boolean;
+  $isCurrentMonth?: boolean;
 }>`
   min-height: ${({ $isHeader }) => ($isHeader ? 24 : 80)}px;
   border-radius: ${({ $isHeader }) => ($isHeader ? '' : 5)}px;
   background: ${({ $isWeekend }) => ($isWeekend ? '#f5f5f5' : 'white')};
-  border: ${({ $isCurrentDay }) => ($isCurrentDay ? '1px solid tomato' : '')};
   background: ${({ $isHeader }) => ($isHeader ? '#efebe9' : 'white')};
   background: ${({ $isCurrentDay }) => ($isCurrentDay ? '#ffccbc' : '')};
   display: flex;
-  justify-content: flex-end;
+  //justify-content: flex-end;
   min-width: 110px;
   padding: 5px;
+
+  justify-content: space-between;
+  flex-direction: row-reverse;
+
+  color: ${({ $isCurrentMonth }) => ($isCurrentMonth ? 'black' : '#bdbdbd')};
 `;
 
 export const DayWrapper = styled.div``;
