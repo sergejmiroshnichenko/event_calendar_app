@@ -1,6 +1,14 @@
 import dayjs, { Dayjs } from 'dayjs';
-import { Cells, CurrentDay, DayWrapper, GridWrapper } from 'components/Calendar/Calendar.styles.ts';
+import {
+  Cells,
+  CurrentDay,
+  DayWrapper,
+  EventItemWrapper,
+  EventListWrapper,
+  GridWrapper,
+} from 'components/Calendar/Calendar.styles.ts';
 import { FC } from 'react';
+import { truncateText } from 'services/truncateText.ts';
 
 interface ICalendar {
   today: Dayjs;
@@ -46,19 +54,19 @@ export const Calendar: FC<ICalendar> = ({ today, events }) => {
                 dayItem.format('D')
               )}
             </DayWrapper>
-            <div style={{ display: 'flex', flexDirection: 'column', alignSelf: 'end' }}>
-              <ul>
-                {events
-                  .filter(
-                    (event) =>
-                      dayjs(event.date).unix() >= dayItem.unix() &&
-                      dayjs(event.date).unix() <= dayItem.clone().endOf('day').unix(),
-                  )
-                  .map((event) => (
-                    <li>{event.title}</li>
-                  ))}
-              </ul>
-            </div>
+            <EventListWrapper>
+              {events
+                .filter(
+                  (event) =>
+                    dayjs(event.date).unix() >= dayItem.unix() &&
+                    dayjs(event.date).unix() <= dayItem.clone().endOf('day').unix(),
+                )
+                .map((event) => (
+                  <EventItemWrapper $bg={event.background} key={event.id}>
+                    {truncateText(event.title, 22)}
+                  </EventItemWrapper>
+                ))}
+            </EventListWrapper>
           </Cells>
         ))}
       </GridWrapper>

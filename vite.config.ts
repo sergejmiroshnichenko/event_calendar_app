@@ -10,11 +10,7 @@ export default defineConfig({
       assets: '/src/assets',
       types: '/src/types',
       hooks: '/src/hooks',
-      pages: '/src/pages',
-      store: '/src/store',
-      routes: '/src/routes',
       services: '/src/services',
     },
   },
 });
-

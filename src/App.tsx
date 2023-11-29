@@ -6,6 +6,7 @@ import { Stack, styled } from '@mui/material';
 import { Header } from 'components/Header/Header.tsx';
 import { useState } from 'react';
 import { Modal } from 'components/Modal/Modal.tsx';
+import { getRandomColor } from 'services/getRandomColor.ts';
 
 const StackStyled = styled(Stack)`
   margin: 50px auto;
@@ -69,17 +70,17 @@ function App() {
 
   const [modalActive, setModalActive] = useState(false);
 
+  const [events, setEvents] = useState<Record<string, string>[]>(() => {
+    const storedEvents = localStorage.getItem('events');
+    return storedEvents ? JSON.parse(storedEvents) : [];
+  });
+
   const [eventDate, setEventDate] = useState({
     title: '',
     description: '',
     date: dayjs().format('YYYY-MM-DD'),
     time: '',
   });
-
-  const [events, setEvents] = useState<Record<string, string>[]>([]);
-
-  console.log('events', events);
-  console.log('eventDate', dayjs(eventDate.date).unix());
 
   const prevMonthHandler = () => {
     setToday((prev) => prev.subtract(1, 'month'));
@@ -111,7 +112,9 @@ function App() {
     const newEvent = {
       ...eventDate,
       id: String(events.length + 1),
+      background: getRandomColor(),
     };
+    localStorage.setItem('events', JSON.stringify([...events, newEvent]));
     setEvents((prevEvents) => [...prevEvents, newEvent]);
   };
 
@@ -149,7 +152,11 @@ function App() {
               value={eventDate.date}
               onChange={({ target }) => eventChangeHandler(target.value, 'date')}
             />
-            <EventTime type="time" placeholder={'Begin time'} />
+            <EventTime
+              type="time"
+              placeholder={'Begin time'}
+              onChange={({ target }) => eventChangeHandler(target.value, 'time')}
+            />
             <EventHours>🕒</EventHours>
             <button
               onClick={(e) => {
