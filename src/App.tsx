@@ -115,19 +115,28 @@ function App() {
   };
 
   const addEvent = () => {
-    const newEvent = {
-      ...event,
-      id: String(events.length + 1),
-      background: getRandomColor(),
-    };
-    localStorage.setItem('events', JSON.stringify([...events, newEvent]));
-    setEvents(prevEvents => [...prevEvents, newEvent]);
+    if (event.id) {
+      const updatedEvents = events.map(eventEl => (eventEl.id === event.id ? event : eventEl));
+      setEvents(updatedEvents);
+      localStorage.setItem('events', JSON.stringify(updatedEvents));
+    } else {
+      const newEvent = {
+        ...event,
+        id: String(events.length + 1),
+        background: getRandomColor(),
+      };
+      localStorage.setItem('events', JSON.stringify([...events, newEvent]));
+      setEvents(prevEvents => [...prevEvents, newEvent]);
+    }
   };
 
   const openFormHandler = (methodName: string, eventForEdit: Record<string, string>) => {
     console.log(methodName);
     setModalActive(true);
     setEvent(eventForEdit);
+    setEvents(prevEvents =>
+      prevEvents.map(eventEl => (eventEl.id === eventForEdit.id ? eventForEdit : eventEl)),
+    );
   };
 
   const eventChangeHandler = (text: string, field: string) => {
