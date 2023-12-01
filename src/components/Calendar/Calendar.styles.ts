@@ -28,13 +28,12 @@ export const Cells = styled.div<{
   background: ${({ $isWeekend }) => ($isWeekend ? '#f5f5f5' : 'white')};
   background: ${({ $isHeader }) => ($isHeader ? '#efebe9' : 'white')};
   background: ${({ $isCurrentDay }) => ($isCurrentDay ? '#eeeeee' : '')};
+  border: ${({ $isCurrentDay }) => ($isCurrentDay ? '1px solid white' : '')};
   display: flex;
   min-width: 110px;
   padding: 5px;
-
   justify-content: space-between;
   flex-direction: row-reverse;
-
   color: ${({ $isCurrentMonth }) => ($isCurrentMonth ? 'black' : '#bdbdbd')};
 `;
 
@@ -49,6 +48,14 @@ export const CurrentDay = styled.span`
   align-items: center;
   font-weight: 600;
   margin: -5px;
+  border: 1px solid #eeeeee;
+  z-index: 1;
+  position: relative;
+  background: #eeeeee;
+  color: black;
+  box-shadow:
+    rgba(0, 0, 0, 0.08) 0 0 0 1px,
+    rgba(0, 0, 0, 0.3) 0 4px 4px 0;
 `;
 
 export const EventListWrapper = styled.ul`
@@ -58,7 +65,7 @@ export const EventListWrapper = styled.ul`
   width: 100%;
 `;
 
-export const EventItemWrapper = styled.li<{
+export const EventItemWrapper = styled.button<{
   $bg: string;
 }>`
   background: ${({ $bg }) => $bg};

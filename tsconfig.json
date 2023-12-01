@@ -20,6 +20,7 @@
       "types/*": ["types/*"],
       "assets/*": ["assets/*"],
       "services/*": ["services/*"],
+      "store/*": ["store/*"],
     },
 
     /* Linting */

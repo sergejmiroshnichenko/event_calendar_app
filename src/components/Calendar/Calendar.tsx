@@ -13,9 +13,10 @@ import { truncateText } from 'services/truncateText.ts';
 interface ICalendar {
   today: Dayjs;
   events: Record<string, string>[];
+  openFormHandler: (methodName: string, eventForHandler: Record<string, string>) => void;
 }
 
-export const Calendar: FC<ICalendar> = ({ today, events }) => {
+export const Calendar: FC<ICalendar> = ({ today, events, openFormHandler }) => {
   const totalDays = 42;
 
   const startDayOfWeek = today.clone().startOf('month').startOf('week');
@@ -41,7 +42,7 @@ export const Calendar: FC<ICalendar> = ({ today, events }) => {
         ))}
       </GridWrapper>
       <GridWrapper>
-        {daysArray.map((dayItem) => (
+        {daysArray.map(dayItem => (
           <Cells
             key={dayItem.unix()}
             $isWeekend={isWeekend(dayItem)}
@@ -57,14 +58,18 @@ export const Calendar: FC<ICalendar> = ({ today, events }) => {
             <EventListWrapper>
               {events
                 .filter(
-                  (event) =>
+                  event =>
                     dayjs(event.date).unix() >= dayItem.unix() &&
                     dayjs(event.date).unix() <= dayItem.clone().endOf('day').unix(),
                 )
-                .map((event) => (
-                  <EventItemWrapper $bg={event.background} key={event.id}>
-                    {truncateText(event.title, 22)}
-                  </EventItemWrapper>
+                .map(event => (
+                  <li key={event.id}>
+                    <EventItemWrapper
+                      $bg={event.background}
+                      onClick={() => openFormHandler('Update', event)}>
+                      {truncateText(event.title, 22)}
+                    </EventItemWrapper>
+                  </li>
                 ))}
             </EventListWrapper>
           </Cells>

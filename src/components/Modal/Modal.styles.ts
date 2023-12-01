@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const ModalBackground = styled.div<{ active: boolean }>`
+export const ModalBackground = styled.div<{ $active: string }>`
   background: rgba(0, 0, 0, 0.75);
   height: 100%;
   backdrop-filter: blur(10px);
@@ -12,12 +12,12 @@ export const ModalBackground = styled.div<{ active: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: ${({ active }) => (active ? 1 : 0)};
-  pointer-events: ${({ active }) => (active ? 'all' : 'none')};
+  opacity: ${({ $active }) => ($active ? 1 : 0)};
+  pointer-events: ${({ $active }) => ($active ? 'all' : 'none')};
   transition: 0.5s;
 `;
 
-export const ModalContent = styled.div<{ active: boolean }>`
+export const ModalContent = styled.div<{ $active: string }>`
   display: flex;
   flex-direction: column;
   background-color: white;
@@ -26,7 +26,7 @@ export const ModalContent = styled.div<{ active: boolean }>`
   max-width: 22%;
   margin: auto;
   transition: 0.4s all;
-  transform: ${({ active }) => (active ? 'scale(1)' : 'scale(0.5)')};
+  transform: ${({ $active }) => ($active ? 'scale(1)' : 'scale(0.5)')};
   width: 600px;
   height: 400px;
   overflow: auto;
@@ -36,7 +36,7 @@ export const Title = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 5px;
+  padding: 0 15px;
   background: #f2f2f2;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
@@ -79,86 +79,6 @@ export const Block = styled.div`
   text-align: left;
 `;
 
-// .modal_background {
-//   background: rgba(0, 0, 0, .75);
-//   height: 100%;
-//   backdrop-filter: blur(10px);
-//   position: fixed;
-//   width: 100%;
-//   top: 0;
-//   left: 0;
-//   z-index: 1;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   opacity: 0;
-//   pointer-events: none;
-//   transition: 0.5s;
-
-// &.active {
-//     opacity: 1;
-//     pointer-events: all;
-//   }
-//
-// .modal_content {
-//     display: flex;
-//     flex-direction: column;
-//     background-color: white;
-//     border: burlywood solid 4px;
-//     border-radius: 10px;
-//     max-width: 50%;
-//     margin: auto;
-//     transition: 0.4s all;
-//     transform: scale(0.5);
-//     width: 600px;
-//     height: 400px;
-//     overflow: auto;
-//
-//   &.active {
-//       transform: scale(1);
-//     }
-//
-//   .title {
-//       display: flex;
-//       justify-content: space-between;
-//       align-items: center;
-//       padding: 0 5px;
-//       background: #f2f2f2;
-//       border-top-left-radius: 5px;
-//       border-top-right-radius: 5px;
-//
-//     .confirmation {
-//         font-weight: 500;
-//         color: #3f5f79;
-//         margin: 0;
-//         padding: 10px 0;
-//         font-size: 17px;
-//       }
-//
-//     .cross {
-//         cursor: pointer;
-//         font-size: 24px;
-//       }
-//     }
-//
-//   .btnBlock {
-//       display: flex;
-//       justify-content: center;
-//       height: 40px;
-//       background: #f2f2f2;
-//       border-end-end-radius: 11px;
-//       border-end-start-radius: 11px;
-//       align-items: center;
-//     }
-//
-//   .block {
-//       flex: 1 1 auto;
-//       padding: 0 15px;
-//       text-align: left;
-//     }
-//   }
-// }
-//
 // @media (min-width: 320px) and (max-width: 480px) {
 // .modal_content.active {
 //     max-width: 100%;
@@ -200,5 +120,3 @@ export const Block = styled.div`
 //     width: 500px;
 //   }
 // }
-//
-//
