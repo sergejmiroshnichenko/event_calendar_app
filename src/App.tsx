@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { Modal } from 'components/Modal/Modal.tsx';
 import { getRandomColor } from 'services/getRandomColor.ts';
 import Update from 'assets/update.svg';
+import Remove from 'assets/remove1.svg';
 
 const StackStyled = styled(Stack)`
   margin: 50px auto;
@@ -31,7 +32,7 @@ const inputStyles = `
 
 const EventTitle = styled('input')`
   ${inputStyles};
-  margin: 20px 0;
+  margin: 40px 0;
   width: 100%;
 `;
 
@@ -39,7 +40,7 @@ const EventDescription = styled('textarea')`
   ${inputStyles};
   resize: none;
   width: 100%;
-  margin: 15% 0;
+  margin: 10% 0;
 `;
 
 const EventDate = styled('input')`
@@ -69,6 +70,16 @@ const UpdateIcon = styled('img')`
   top: 0;
 `;
 
+interface IEvent {
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  id?: string;
+  background?: string;
+  createdAt?: string;
+}
+
 function App() {
   dayjs.locale('en-gb');
 
@@ -79,21 +90,26 @@ function App() {
 
   const [today, setToday] = useState(dayjs());
 
+  console.log('createdAT', today.format('DD.MM.YYYY HH:mm'));
+
   const [modalActive, setModalActive] = useState(false);
 
-  const [events, setEvents] = useState<Record<string, string>[]>(() => {
+  const [events, setEvents] = useState<IEvent[]>(() => {
     const storedEvents = localStorage.getItem('events');
     return storedEvents ? JSON.parse(storedEvents) : [];
   });
 
-  const [event, setEvent] = useState<Record<string, string>>({
+  const [event, setEvent] = useState<IEvent>({
     title: '',
     description: '',
     date: dayjs().format('YYYY-MM-DD'),
     time: '',
+    createdAt: '',
   });
 
   console.log(event);
+
+  const [method, setMethod] = useState('');
 
   const prevMonthHandler = () => {
     setToday(prev => prev.subtract(1, 'month'));
@@ -105,6 +121,8 @@ function App() {
     setToday(dayjs());
   };
 
+  // const date = today.format('DD.MM.YYYY HH:mm');
+
   const resetForm = () => {
     setEvent({
       title: '',
@@ -114,24 +132,35 @@ function App() {
     });
   };
 
+  // const openCreate = (methodeName: string) => {
+  //   console.log(methodeName);
+  //   // setMethod(methodeName);
+  //   addEvent();
+  // };
+
   const addEvent = () => {
-    if (event.id) {
-      const updatedEvents = events.map(eventEl => (eventEl.id === event.id ? event : eventEl));
-      setEvents(updatedEvents);
-      localStorage.setItem('events', JSON.stringify(updatedEvents));
-    } else {
+    const eventIndex = events.findIndex(eventElem => eventElem.id === event.id);
+
+    if (eventIndex === -1) {
       const newEvent = {
         ...event,
         id: String(events.length + 1),
         background: getRandomColor(),
+        createdAt: dayjs().format('DD.MM.YYYY HH:mm'),
       };
       localStorage.setItem('events', JSON.stringify([...events, newEvent]));
       setEvents(prevEvents => [...prevEvents, newEvent]);
+    } else {
+      const updatedEvents = structuredClone(events);
+      updatedEvents[eventIndex] = event;
+      setEvents(updatedEvents);
+      localStorage.setItem('events', JSON.stringify(updatedEvents));
     }
   };
 
-  const openFormHandler = (methodName: string, eventForEdit: Record<string, string>) => {
+  const openFormHandler = (methodName: string, eventForEdit: IEvent) => {
     console.log(methodName);
+    setMethod(methodName);
     setModalActive(true);
     setEvent(eventForEdit);
     setEvents(prevEvents =>
@@ -144,7 +173,6 @@ function App() {
       ...prevState,
       [field]: text,
     }));
-    // localStorage change too
   };
 
   const removeEvent = e => {
@@ -164,6 +192,8 @@ function App() {
           prevMonthHandler={prevMonthHandler}
           nextMonthHandler={nextMonthHandler}
           currentMonthHandler={currentMonthHandler}
+          // openCreate={openCreate}
+          // method={method}
         />
         <Calendar today={today} events={events} openFormHandler={openFormHandler} />
       </StackStyled>
@@ -171,9 +201,15 @@ function App() {
         <Modal
           active={modalActive}
           setActive={setModalActive}
-          title={'Add new idea item'}
-          resetForm={resetForm}>
+          title={method === 'Update' ? 'Edit idea item' : 'Add new idea item'}
+          resetForm={resetForm}
+          setMethod={setMethod}>
           <form>
+            {method === 'Update' && (
+              <p style={{ color: '#9e9e9e', fontSize: '0.85rem', fontStyle: 'italic' }}>
+                Created at {event.createdAt}
+              </p>
+            )}
             <EventTitle
               type="text"
               placeholder={'Title goes here'}
@@ -187,7 +223,7 @@ function App() {
                 value={event.description}
                 onChange={({ target }) => eventChangeHandler(target.value, 'description')}
               />
-              <UpdateIcon src={Update} alt="update icon" />
+              {method === 'Update' && <UpdateIcon src={Update} alt="update icon" />}
             </EventDescriptionWrapper>
             <EventDate
               type="date"
@@ -198,21 +234,26 @@ function App() {
             />
             <EventTime
               type="time"
+              value={event.time}
               placeholder={'Begin time'}
               onChange={({ target }) => eventChangeHandler(target.value, 'time')}
             />
             <EventHours>🕒</EventHours>
 
-            <button onClick={removeEvent}>УДАЛИТь</button>
+            {method === 'Update' && (
+              <button onClick={removeEvent}>
+                <img src={Remove} alt="remove icon" />
+              </button>
+            )}
 
             <button
               onClick={e => {
                 e.preventDefault();
-                setModalActive(false);
                 addEvent();
+                setModalActive(false);
                 resetForm();
               }}>
-              Save
+              SAVE
             </button>
           </form>
         </Modal>

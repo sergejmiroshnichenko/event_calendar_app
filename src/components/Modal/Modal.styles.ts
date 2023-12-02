@@ -47,14 +47,14 @@ export const Confirmation = styled.div`
   color: #3f5f79;
   margin: 0;
   padding: 10px 0;
-  font-size: 17px;
+  font-size: 18px;
 `;
 
 export const Cross = styled.button`
   font-size: 28px;
   background: transparent;
   opacity: 0.7;
-  padding: 20px 0;
+  padding: 15px 0;
 
   &:hover {
     transition: 0.3s ease-in-out;

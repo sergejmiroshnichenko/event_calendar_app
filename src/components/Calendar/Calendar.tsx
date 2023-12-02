@@ -10,10 +10,19 @@ import {
 import { FC } from 'react';
 import { truncateText } from 'services/truncateText.ts';
 
+interface IEvent {
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  id?: string;
+  background?: string | undefined;
+}
+
 interface ICalendar {
   today: Dayjs;
-  events: Record<string, string>[];
-  openFormHandler: (methodName: string, eventForHandler: Record<string, string>) => void;
+  events: IEvent[];
+  openFormHandler: (methodName: string, eventForHandler: IEvent) => void;
 }
 
 export const Calendar: FC<ICalendar> = ({ today, events, openFormHandler }) => {

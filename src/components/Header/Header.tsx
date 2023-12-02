@@ -25,6 +25,8 @@ interface HeaderProps {
   currentMonthHandler: () => void;
   today: Dayjs;
   setModalActive: (active: boolean) => void;
+  // openCreate: (methodName: string) => void;
+  // method: string;
 }
 
 export const Header: FC<HeaderProps> = ({
@@ -33,6 +35,8 @@ export const Header: FC<HeaderProps> = ({
   prevMonthHandler,
   today,
   setModalActive,
+  // openCreate,
+  // method,
 }) => {
   const startDayOfWeek = today.clone().startOf('month').format('MMMM YYYY');
 
@@ -46,7 +50,13 @@ export const Header: FC<HeaderProps> = ({
         borderStartStartRadius: 7,
         borderStartEndRadius: 7,
       }}>
-      <button onClick={() => setModalActive(true)}>+</button>
+      <button
+        onClick={() => {
+          setModalActive(true);
+          // openCreate('Create');
+        }}>
+        {/*{method}*/}+
+      </button>
       <ButtonWrapper onClick={prevMonthHandler}>&#60;</ButtonWrapper>
       <CurrentMonthButton onClick={currentMonthHandler}>{startDayOfWeek}</CurrentMonthButton>
       <ButtonWrapper onClick={nextMonthHandler}>&#62;</ButtonWrapper>

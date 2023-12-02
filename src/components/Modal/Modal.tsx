@@ -15,11 +15,25 @@ interface ModalProps {
   children: ReactNode;
   title: string;
   resetForm: () => void;
+  setMethod: (methodName: string) => void;
 }
 
-export const Modal: FC<ModalProps> = ({ active, setActive, children, title, resetForm }) => {
+export const Modal: FC<ModalProps> = ({
+  active,
+  setActive,
+  children,
+  title,
+  resetForm,
+  setMethod,
+}) => {
   return (
-    <ModalBackground $active={String(active)} onClick={() => setActive(false)}>
+    <ModalBackground
+      $active={String(active)}
+      onClick={() => {
+        setActive(false);
+        resetForm();
+        setMethod('');
+      }}>
       <ModalContent $active={String(active)} onClick={e => e.stopPropagation()}>
         <Title>
           <Confirmation>{title}</Confirmation>
@@ -27,6 +41,7 @@ export const Modal: FC<ModalProps> = ({ active, setActive, children, title, rese
             onClick={() => {
               setActive(false);
               resetForm();
+              setMethod('');
             }}>
             &times;
           </Cross>

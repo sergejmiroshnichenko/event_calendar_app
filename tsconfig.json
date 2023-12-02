@@ -21,6 +21,7 @@
       "assets/*": ["assets/*"],
       "services/*": ["services/*"],
       "store/*": ["store/*"],
+      "styles/*": ["styles/*"],
     },
 
     /* Linting */

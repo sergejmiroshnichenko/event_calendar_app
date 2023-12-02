@@ -66,7 +66,7 @@ export const EventListWrapper = styled.ul`
 `;
 
 export const EventItemWrapper = styled.button<{
-  $bg: string;
+  $bg: string | undefined;
 }>`
   background: ${({ $bg }) => $bg};
   color: black;
