@@ -4,7 +4,7 @@ import 'dayjs/locale/en-gb.js';
 import { Calendar } from 'components/Calendar/Calendar.tsx';
 import { Stack, styled } from '@mui/material';
 import { Header } from 'components/Header/Header.tsx';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Modal } from 'components/Modal/Modal.tsx';
 import { getRandomColor } from 'services/getRandomColor.ts';
 import Update from 'assets/update.svg';
@@ -48,6 +48,7 @@ const EventDate = styled('input')`
   width: 55%;
   position: relative;
 `;
+
 const EventTime = styled('input')`
   ${inputStyles};
   width: 30%;
@@ -64,6 +65,8 @@ const EventDescriptionWrapper = styled('div')`
   position: relative;
 `;
 
+const EventTitleWrapper = styled('div')``;
+
 const UpdateIcon = styled('img')`
   position: absolute;
   right: 0;
@@ -78,6 +81,7 @@ interface IEvent {
   id?: string;
   background?: string;
   createdAt?: string;
+  lastUpdatedTime?: string | null;
 }
 
 function App() {
@@ -105,11 +109,26 @@ function App() {
     date: dayjs().format('YYYY-MM-DD'),
     time: '',
     createdAt: '',
+    lastUpdatedTime: null,
   });
 
   console.log(event);
 
   const [method, setMethod] = useState('');
+
+  const [titleError, setTitleError] = useState('');
+
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    const isTitleDuplicate = events.some(eventEl => eventEl.title === event.title);
+
+    if (!event.title || titleError || isTitleDuplicate) {
+      setIsFormValid(false);
+    } else {
+      setIsFormValid(true);
+    }
+  }, [event.title, events, titleError]);
 
   const prevMonthHandler = () => {
     setToday(prev => prev.subtract(1, 'month'));
@@ -132,13 +151,8 @@ function App() {
     });
   };
 
-  // const openCreate = (methodeName: string) => {
-  //   console.log(methodeName);
-  //   // setMethod(methodeName);
-  //   addEvent();
-  // };
-
   const addEvent = () => {
+    const currentTime = dayjs().format('DD.MM.YYYY HH:mm');
     const eventIndex = events.findIndex(eventElem => eventElem.id === event.id);
 
     if (eventIndex === -1) {
@@ -146,13 +160,15 @@ function App() {
         ...event,
         id: String(events.length + 1),
         background: getRandomColor(),
-        createdAt: dayjs().format('DD.MM.YYYY HH:mm'),
+        createdAt: currentTime,
+        lastUpdatedTime: null,
       };
       localStorage.setItem('events', JSON.stringify([...events, newEvent]));
       setEvents(prevEvents => [...prevEvents, newEvent]);
     } else {
       const updatedEvents = structuredClone(events);
-      updatedEvents[eventIndex] = event;
+      const updatedEvent = { ...event, lastUpdatedTime: currentTime };
+      updatedEvents[eventIndex] = updatedEvent;
       setEvents(updatedEvents);
       localStorage.setItem('events', JSON.stringify(updatedEvents));
     }
@@ -173,6 +189,12 @@ function App() {
       ...prevState,
       [field]: text,
     }));
+
+    if (field === 'title' && !text) {
+      setTitleError('title can\'t be empty');
+    } else {
+      setTitleError('');
+    }
   };
 
   const removeEvent = e => {
@@ -207,16 +229,21 @@ function App() {
           <form>
             {method === 'Update' && (
               <p style={{ color: '#9e9e9e', fontSize: '0.85rem', fontStyle: 'italic' }}>
-                Created at {event.createdAt}
+                {event.lastUpdatedTime
+                  ? `Updated at ${event.lastUpdatedTime}`
+                  : `Created at ${event.createdAt}`}
               </p>
             )}
-            <EventTitle
-              type="text"
-              placeholder={'Title goes here'}
-              required
-              value={event.title}
-              onChange={({ target }) => eventChangeHandler(target.value, 'title')}
-            />
+            <EventTitleWrapper>
+              <EventTitle
+                type="text"
+                placeholder={'Title goes here'}
+                required
+                value={event.title}
+                onChange={({ target }) => eventChangeHandler(target.value, 'title')}
+              />
+              {titleError && <span style={{ color: 'red' }}>{titleError}</span>}
+            </EventTitleWrapper>
             <EventDescriptionWrapper>
               <EventDescription
                 placeholder={'Description'}
@@ -247,11 +274,13 @@ function App() {
             )}
 
             <button
+              disabled={!isFormValid}
               onClick={e => {
                 e.preventDefault();
                 addEvent();
                 setModalActive(false);
                 resetForm();
+                setMethod('');
               }}>
               SAVE
             </button>

@@ -15,6 +15,21 @@ const ButtonWrapper = styled.button`
   margin: 0;
 `;
 
+const ButtonCreate = styled.button`
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  box-shadow:
+    rgba(0, 0, 0, 0.08) 0 0 0 1px,
+    rgba(0, 0, 0, 0.3) 0 4px 4px 0;
+  display: flex;
+  justify-content: center;
+  font-size: 25px;
+  padding: 0;
+  background: #00b0ff;
+  color: white;
+`;
+
 const CurrentMonthButton = styled(ButtonWrapper)`
   padding: 0 8px;
 `;
@@ -46,17 +61,17 @@ export const Header: FC<HeaderProps> = ({
         background: '#efebe9',
         display: 'flex',
         alignItems: 'center',
-        padding: '15px 0',
+        padding: '15px 10px',
         borderStartStartRadius: 7,
         borderStartEndRadius: 7,
       }}>
-      <button
+      <ButtonCreate
         onClick={() => {
           setModalActive(true);
           // openCreate('Create');
         }}>
         {/*{method}*/}+
-      </button>
+      </ButtonCreate>
       <ButtonWrapper onClick={prevMonthHandler}>&#60;</ButtonWrapper>
       <CurrentMonthButton onClick={currentMonthHandler}>{startDayOfWeek}</CurrentMonthButton>
       <ButtonWrapper onClick={nextMonthHandler}>&#62;</ButtonWrapper>
