@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
 interface ICalendar {
   event: Record<string, string>;
+  selectedDate: Dayjs;
 }
 
 const initialState: ICalendar = {
@@ -12,6 +13,7 @@ const initialState: ICalendar = {
     date: dayjs().format('YYYY-MM-DD'),
     time: '',
   },
+  selectedDate: dayjs(),
 };
 
 const calendarSlice = createSlice({
@@ -27,9 +29,12 @@ const calendarSlice = createSlice({
     resetForm: state => {
       state.event = initialState.event;
     },
+    setSelectedDate: (state, action) => {
+      state.selectedDate = action.payload;
+    },
   },
 });
 
-export const { setEventDetails, resetForm } = calendarSlice.actions;
+export const { setEventDetails, resetForm, setSelectedDate } = calendarSlice.actions;
 
 export default calendarSlice.reducer;

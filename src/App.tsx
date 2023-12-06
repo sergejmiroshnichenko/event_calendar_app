@@ -3,19 +3,18 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/en-gb.js';
 import { Calendar } from 'components/Calendar/Calendar.tsx';
 import { Stack, styled } from '@mui/material';
-import { Header } from 'components/Header/Header.tsx';
+import { HeaderCalendar } from 'components/HeaderCalendar/HeaderCalendar.tsx';
 import { useEffect, useState } from 'react';
 import { Modal } from 'components/Modal/Modal.tsx';
-import { getRandomColor } from 'services/getRandomColor.ts';
+import { getRandomColor } from './helpers/getRandomColor.ts';
 import Update from 'assets/update.svg';
 import Remove from 'assets/remove1.svg';
+import theme from 'styles/theme.ts';
 
 const StackStyled = styled(Stack)`
   margin: 50px auto;
   max-width: 968px;
-  box-shadow:
-    0 0 0 1px #b7caf3,
-    0 8px 20px 6px #888;
+  box-shadow: ${theme.shadows.primary};
   border-radius: 7px;
 `;
 
@@ -32,15 +31,22 @@ const inputStyles = `
 
 const EventTitle = styled('input')`
   ${inputStyles};
-  margin: 40px 0;
+  margin: 40px 0 5px;
   width: 100%;
+`;
+
+const TitleError = styled('span')`
+  color: red;
+  position: absolute;
+  left: 0;
+  bottom: -20%;
 `;
 
 const EventDescription = styled('textarea')`
   ${inputStyles};
   resize: none;
   width: 100%;
-  margin: 10% 0;
+  margin: 13% 0;
 `;
 
 const EventDate = styled('input')`
@@ -65,7 +71,9 @@ const EventDescriptionWrapper = styled('div')`
   position: relative;
 `;
 
-const EventTitleWrapper = styled('div')``;
+const EventTitleWrapper = styled('div')`
+  position: relative;
+`;
 
 const UpdateIcon = styled('img')`
   position: absolute;
@@ -91,10 +99,6 @@ function App() {
   // const endDayOfWeek = dayjs().endOf('month').endOf('week');
   // console.log('startDayOfWeek', startDayOfWeek.format('YYYY-MM-DD'));
   // console.log('endDayOfWeek', endDayOfWeek);
-
-  const [today, setToday] = useState(dayjs());
-
-  console.log('createdAT', today.format('DD.MM.YYYY HH:mm'));
 
   const [modalActive, setModalActive] = useState(false);
 
@@ -129,18 +133,6 @@ function App() {
       setIsFormValid(true);
     }
   }, [event.title, events, titleError]);
-
-  const prevMonthHandler = () => {
-    setToday(prev => prev.subtract(1, 'month'));
-  };
-  const nextMonthHandler = () => {
-    setToday(prev => prev.add(1, 'month'));
-  };
-  const currentMonthHandler = () => {
-    setToday(dayjs());
-  };
-
-  // const date = today.format('DD.MM.YYYY HH:mm');
 
   const resetForm = () => {
     setEvent({
@@ -208,16 +200,12 @@ function App() {
   return (
     <>
       <StackStyled>
-        <Header
-          today={today}
+        <HeaderCalendar
           setModalActive={setModalActive}
-          prevMonthHandler={prevMonthHandler}
-          nextMonthHandler={nextMonthHandler}
-          currentMonthHandler={currentMonthHandler}
           // openCreate={openCreate}
           // method={method}
         />
-        <Calendar today={today} events={events} openFormHandler={openFormHandler} />
+        <Calendar events={events} openFormHandler={openFormHandler} />
       </StackStyled>
       {modalActive ? (
         <Modal
@@ -242,7 +230,7 @@ function App() {
                 value={event.title}
                 onChange={({ target }) => eventChangeHandler(target.value, 'title')}
               />
-              {titleError && <span style={{ color: 'red' }}>{titleError}</span>}
+              {titleError && <TitleError>{titleError}</TitleError>}
             </EventTitleWrapper>
             <EventDescriptionWrapper>
               <EventDescription
@@ -267,23 +255,25 @@ function App() {
             />
             <EventHours>🕒</EventHours>
 
-            {method === 'Update' && (
-              <button onClick={removeEvent}>
-                <img src={Remove} alt="remove icon" />
-              </button>
-            )}
+            <div style={{ marginTop: 30, display: 'flex', justifyContent: 'flex-end', gap: 15 }}>
+              {method === 'Update' && (
+                <button onClick={removeEvent}>
+                  <img src={Remove} alt="remove icon" />
+                </button>
+              )}
 
-            <button
-              disabled={!isFormValid}
-              onClick={e => {
-                e.preventDefault();
-                addEvent();
-                setModalActive(false);
-                resetForm();
-                setMethod('');
-              }}>
-              SAVE
-            </button>
+              <button
+                disabled={!isFormValid}
+                onClick={e => {
+                  e.preventDefault();
+                  addEvent();
+                  setModalActive(false);
+                  resetForm();
+                  setMethod('');
+                }}>
+                SAVE
+              </button>
+            </div>
           </form>
         </Modal>
       ) : null}

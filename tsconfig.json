@@ -19,7 +19,7 @@
       "hooks/*": ["hooks/*"],
       "types/*": ["types/*"],
       "assets/*": ["assets/*"],
-      "services/*": ["services/*"],
+      "helpers/*": ["helpers/*"],
       "store/*": ["store/*"],
       "styles/*": ["styles/*"],
     },

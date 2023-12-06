@@ -10,7 +10,7 @@ export default defineConfig({
       assets: '/src/assets',
       types: '/src/types',
       hooks: '/src/hooks',
-      services: '/src/services',
+      helpers: '/src/helpers',
       store: '/src/store',
       styles: '/src/styles',
     },

@@ -1,4 +1,5 @@
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+import 'dayjs/locale/en-gb.js';
 import {
   Cells,
   CurrentDay,
@@ -8,7 +9,9 @@ import {
   GridWrapper,
 } from 'components/Calendar/Calendar.styles.ts';
 import { FC } from 'react';
-import { truncateText } from 'services/truncateText.ts';
+import { truncateText } from 'helpers/truncateText.ts';
+import { isCurrentDay, isCurrentMonth, isWeekend } from 'helpers/calendarDateCalculations.ts';
+import { useAppSelector } from 'hooks/redux-hooks.ts';
 
 interface IEvent {
   title: string;
@@ -20,24 +23,20 @@ interface IEvent {
 }
 
 interface ICalendar {
-  today: Dayjs;
   events: IEvent[];
   openFormHandler: (methodName: string, eventForHandler: IEvent) => void;
 }
 
-export const Calendar: FC<ICalendar> = ({ today, events, openFormHandler }) => {
+export const Calendar: FC<ICalendar> = ({ events, openFormHandler }) => {
   const totalDays = 42;
+  dayjs.locale('en-gb');
 
-  const startDayOfWeek = today.clone().startOf('month').startOf('week');
+  const { selectedDate } = useAppSelector(state => state.calendar);
+
+  const startDayOfWeek = selectedDate.clone().startOf('month').startOf('week');
   const daysArray = Array.from({ length: totalDays }, (_, index) =>
     startDayOfWeek.add(index, 'day'),
   );
-
-  const isWeekend = (day: dayjs.Dayjs) => day.day() === 6 || day.day() === 0;
-
-  const isCurrentDay = (day: dayjs.Dayjs) => day.isSame(dayjs(), 'day');
-
-  const isCurrentMonth = (day: dayjs.Dayjs) => today.isSame(day, 'month');
 
   return (
     <>
@@ -56,7 +55,7 @@ export const Calendar: FC<ICalendar> = ({ today, events, openFormHandler }) => {
             key={dayItem.unix()}
             $isWeekend={isWeekend(dayItem)}
             $isCurrentDay={isCurrentDay(dayItem)}
-            $isCurrentMonth={isCurrentMonth(dayItem)}>
+            $isCurrentMonth={isCurrentMonth(dayItem, dayjs())}>
             <DayWrapper>
               {isCurrentDay(dayItem) ? (
                 <CurrentDay>{dayItem.format('D')}</CurrentDay>
