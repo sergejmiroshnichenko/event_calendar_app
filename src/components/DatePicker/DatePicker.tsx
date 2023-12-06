@@ -1,61 +1,82 @@
 import { FC, useState } from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import dayjs from 'dayjs';
-import 'dayjs/locale/en-gb.js';
-import { setSelectedDate } from 'store/slices/calendarSlice.ts';
 import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks.ts';
+import { setSelectedDate } from 'store/slices/calendarSlice.ts';
+import {
+  ButtonNavigation,
+  CalenderContainer,
+  IconBox,
+  NavigationBlock,
+  PickerWrapper,
+} from './DatePicker.styles.ts';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
-export const DatePickerComponent: FC = () => {
-  dayjs.locale('en-gb');
+export const DatePicker: FC = () => {
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
-  const [showCalendar, setShowCalendar] = useState(false);
   const { selectedDate } = useAppSelector(state => state.calendar);
+
+  const prevMonthHandler = () => {
+    dispatch(setSelectedDate(selectedDate.subtract(1, 'month')));
+  };
+
+  const nextMonthHandler = () => {
+    dispatch(setSelectedDate(selectedDate.add(1, 'month')));
+  };
 
   const dispatch = useAppDispatch();
 
-  const toggleCalendar = () => {
-    setShowCalendar(!showCalendar);
-  };
-
-  const onChangeHandler = (data: Date | null) => {
-    if (data) {
-      const dayJsData = dayjs(data);
-      dispatch(setSelectedDate(dayJsData));
-      console.log('dayJsData', dayJsData);
-      // setShowCalendar(true);
-      toggleCalendar();
-    }
-  };
-
-  const increaseYear = () => {
+  const nextYearHandler = () => {
     dispatch(setSelectedDate(selectedDate.add(1, 'year')));
-    setShowCalendar(true);
   };
 
-  const decreaseYear = () => {
+  const prevYearHandler = () => {
     dispatch(setSelectedDate(selectedDate.subtract(1, 'year')));
   };
 
+  const handleMonthChange = (monthIndex: number) => {
+    const newDate = selectedDate.month(monthIndex);
+    dispatch(setSelectedDate(newDate));
+  };
+
+  const closeCalendar = () => {
+    setShowDatePicker(false);
+  };
+
+  const openCalendar = () => {
+    setShowDatePicker(true);
+  };
+
   return (
-    <div onClick={toggleCalendar}>
-      {showCalendar ? (
-        <DatePicker
-          selected={selectedDate?.toDate()}
-          onChange={date => onChangeHandler(date)}
-          inline
-          showMonthYearPicker
-          renderCustomHeader={() => (
-            <div>
-              <button onClick={decreaseYear}>{'<'}</button>
-              <span>{selectedDate?.format('YYYY')}</span>
-              <button onClick={increaseYear}>{'>'}</button>
-            </div>
-          )}
-        />
+    <PickerWrapper onClick={openCalendar}>
+      {showDatePicker ? (
+        <CalenderContainer>
+          <NavigationBlock>
+            <ButtonNavigation onClick={prevYearHandler}>{'<'}</ButtonNavigation>
+            <h4>{selectedDate.format('YYYY')}</h4>
+            <ButtonNavigation onClick={nextYearHandler}>{'>'}</ButtonNavigation>
+          </NavigationBlock>
+
+          <NavigationBlock>
+            <ButtonNavigation onClick={prevMonthHandler}>{'<'}</ButtonNavigation>
+            <select
+              value={selectedDate.month()}
+              onChange={e => handleMonthChange(+e.target.value)}
+              onBlur={closeCalendar}>
+              {[...Array(12)].map((_, i) => (
+                <option key={i} value={i}>
+                  {dayjs().month(i).format('MMMM')}
+                </option>
+              ))}
+            </select>
+            <ButtonNavigation onClick={nextMonthHandler}>{'>'}</ButtonNavigation>
+          </NavigationBlock>
+        </CalenderContainer>
       ) : (
-        'Календарь'
+        <IconBox>
+          <CalendarTodayIcon />
+        </IconBox>
       )}
-    </div>
+    </PickerWrapper>
   );
 };

@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks.ts';
 import { setSelectedDate } from 'store/slices/calendarSlice.ts';
 import dayjs from 'dayjs';
-import { Picker } from 'components/DatePicker_/Picker.tsx';
+import { DatePicker } from 'components/DatePicker/DatePicker.tsx';
 
 const ButtonWrapper = styled.button`
   border: unset;
@@ -52,20 +52,14 @@ interface HeaderProps {
   // method: string;
 }
 
-export const HeaderCalendar: FC<HeaderProps> = ({
+export const NavigationCalendar: FC<HeaderProps> = ({
   setModalActive,
   // openCreate,
   // method,
 }) => {
   // const startDayOfWeek = today.clone().startOf('month').format('MMMM YYYY');
 
-  console.log('year', dayjs());
-
   const { selectedDate } = useAppSelector(state => state.calendar);
-
-  console.log('selectedDateHeader', selectedDate);
-
-  console.log('selectedDate', selectedDate);
 
   const dispatch = useAppDispatch();
 
@@ -94,8 +88,7 @@ export const HeaderCalendar: FC<HeaderProps> = ({
         {selectedDate.format('MMMM YYYY')}
       </CurrentMonthButton>
       <ButtonWrapper onClick={nextMonthHandler}>&#62;</ButtonWrapper>
-      {/*<DatePickerComponent />*/}
-      <Picker />
+      <DatePicker />
     </HeaderWrapper>
   );
 };

@@ -3,13 +3,16 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/en-gb.js';
 import { Calendar } from 'components/Calendar/Calendar.tsx';
 import { Stack, styled } from '@mui/material';
-import { HeaderCalendar } from 'components/HeaderCalendar/HeaderCalendar.tsx';
+import { NavigationCalendar } from 'components/NavigationCalendar/NavigationCalendar.tsx';
 import { useEffect, useState } from 'react';
 import { Modal } from 'components/Modal/Modal.tsx';
 import { getRandomColor } from './helpers/getRandomColor.ts';
 import Update from 'assets/update.svg';
 import Remove from 'assets/remove1.svg';
 import theme from 'styles/theme.ts';
+import { IEvent } from 'types/types.ts';
+import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks.ts';
+import { resetForm, setEvent } from 'store/slices/calendarSlice.ts';
 
 const StackStyled = styled(Stack)`
   margin: 50px auto;
@@ -81,17 +84,6 @@ const UpdateIcon = styled('img')`
   top: 0;
 `;
 
-interface IEvent {
-  title: string;
-  description: string;
-  date: string;
-  time: string;
-  id?: string;
-  background?: string;
-  createdAt?: string;
-  lastUpdatedTime?: string | null;
-}
-
 function App() {
   dayjs.locale('en-gb');
 
@@ -107,16 +99,9 @@ function App() {
     return storedEvents ? JSON.parse(storedEvents) : [];
   });
 
-  const [event, setEvent] = useState<IEvent>({
-    title: '',
-    description: '',
-    date: dayjs().format('YYYY-MM-DD'),
-    time: '',
-    createdAt: '',
-    lastUpdatedTime: null,
-  });
+  const dispatch = useAppDispatch();
 
-  console.log(event);
+  const { event } = useAppSelector(state => state.calendar);
 
   const [method, setMethod] = useState('');
 
@@ -133,15 +118,6 @@ function App() {
       setIsFormValid(true);
     }
   }, [event.title, events, titleError]);
-
-  const resetForm = () => {
-    setEvent({
-      title: '',
-      description: '',
-      date: dayjs().format('YYYY-MM-DD'),
-      time: '',
-    });
-  };
 
   const addEvent = () => {
     const currentTime = dayjs().format('DD.MM.YYYY HH:mm');
@@ -167,20 +143,20 @@ function App() {
   };
 
   const openFormHandler = (methodName: string, eventForEdit: IEvent) => {
-    console.log(methodName);
     setMethod(methodName);
     setModalActive(true);
-    setEvent(eventForEdit);
+    dispatch(setEvent(eventForEdit));
     setEvents(prevEvents =>
-      prevEvents.map(eventEl => (eventEl.id === eventForEdit.id ? eventForEdit : eventEl)),
+      prevEvents.map(eventEl =>
+        eventEl.id === eventForEdit.id ? eventForEdit : eventEl,
+      ),
     );
   };
 
   const eventChangeHandler = (text: string, field: string) => {
-    setEvent(prevState => ({
-      ...prevState,
-      [field]: text,
-    }));
+    const partialEvent: Partial<IEvent> = { [field]: text };
+    const event: IEvent = partialEvent as IEvent;
+    dispatch(setEvent(event));
 
     if (field === 'title' && !text) {
       setTitleError('title can\'t be empty');
@@ -200,7 +176,7 @@ function App() {
   return (
     <>
       <StackStyled>
-        <HeaderCalendar
+        <NavigationCalendar
           setModalActive={setModalActive}
           // openCreate={openCreate}
           // method={method}
@@ -212,11 +188,15 @@ function App() {
           active={modalActive}
           setActive={setModalActive}
           title={method === 'Update' ? 'Edit idea item' : 'Add new idea item'}
-          resetForm={resetForm}
           setMethod={setMethod}>
           <form>
             {method === 'Update' && (
-              <p style={{ color: '#9e9e9e', fontSize: '0.85rem', fontStyle: 'italic' }}>
+              <p
+                style={{
+                  color: '#9e9e9e',
+                  fontSize: '0.85rem',
+                  fontStyle: 'italic',
+                }}>
                 {event.lastUpdatedTime
                   ? `Updated at ${event.lastUpdatedTime}`
                   : `Created at ${event.createdAt}`}
@@ -236,7 +216,9 @@ function App() {
               <EventDescription
                 placeholder={'Description'}
                 value={event.description}
-                onChange={({ target }) => eventChangeHandler(target.value, 'description')}
+                onChange={({ target }) =>
+                  eventChangeHandler(target.value, 'description')
+                }
               />
               {method === 'Update' && <UpdateIcon src={Update} alt="update icon" />}
             </EventDescriptionWrapper>
@@ -255,7 +237,13 @@ function App() {
             />
             <EventHours>🕒</EventHours>
 
-            <div style={{ marginTop: 30, display: 'flex', justifyContent: 'flex-end', gap: 15 }}>
+            <div
+              style={{
+                marginTop: 30,
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: 15,
+              }}>
               {method === 'Update' && (
                 <button onClick={removeEvent}>
                   <img src={Remove} alt="remove icon" />
@@ -268,7 +256,8 @@ function App() {
                   e.preventDefault();
                   addEvent();
                   setModalActive(false);
-                  resetForm();
+                  // resetForm();
+                  dispatch(resetForm());
                   setMethod('');
                 }}>
                 SAVE

@@ -1,8 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import dayjs, { Dayjs } from 'dayjs';
+import 'dayjs/locale/en-gb.js';
+import { IEvent } from 'types/types.ts';
+
+dayjs.locale('en-gb');
 
 interface ICalendar {
-  event: Record<string, string>;
+  event: IEvent;
   selectedDate: Dayjs;
 }
 
@@ -20,7 +24,7 @@ const calendarSlice = createSlice({
   name: 'calendar',
   initialState,
   reducers: {
-    setEventDetails: (state, action: PayloadAction<Record<string, string>>) => {
+    setEvent: (state, action: PayloadAction<IEvent>) => {
       state.event = {
         ...state.event,
         ...action.payload,
@@ -29,12 +33,12 @@ const calendarSlice = createSlice({
     resetForm: state => {
       state.event = initialState.event;
     },
-    setSelectedDate: (state, action) => {
+    setSelectedDate: (state, action: PayloadAction<Dayjs>) => {
       state.selectedDate = action.payload;
     },
   },
 });
 
-export const { setEventDetails, resetForm, setSelectedDate } = calendarSlice.actions;
+export const { setEvent, resetForm, setSelectedDate } = calendarSlice.actions;
 
 export default calendarSlice.reducer;

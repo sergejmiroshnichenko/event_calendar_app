@@ -8,13 +8,14 @@ import {
   Title,
 } from './Modal.styles.ts';
 import { FC, ReactNode } from 'react';
+import { resetForm } from 'store/slices/calendarSlice.ts';
+import { useAppDispatch } from 'hooks/redux-hooks.ts';
 
 interface ModalProps {
   active: boolean;
   setActive: (active: boolean) => void;
   children: ReactNode;
   title: string;
-  resetForm: () => void;
   setMethod: (methodName: string) => void;
 }
 
@@ -23,15 +24,15 @@ export const Modal: FC<ModalProps> = ({
   setActive,
   children,
   title,
-  resetForm,
   setMethod,
 }) => {
+  const dispatch = useAppDispatch();
   return (
     <ModalBackground
       $active={String(active)}
       onClick={() => {
         setActive(false);
-        resetForm();
+        dispatch(resetForm());
         setMethod('');
       }}>
       <ModalContent $active={String(active)} onClick={e => e.stopPropagation()}>
@@ -40,7 +41,7 @@ export const Modal: FC<ModalProps> = ({
           <Cross
             onClick={() => {
               setActive(false);
-              resetForm();
+              dispatch(resetForm());
               setMethod('');
             }}>
             &times;

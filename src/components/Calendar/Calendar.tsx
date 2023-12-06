@@ -7,20 +7,17 @@ import {
   EventItemWrapper,
   EventListWrapper,
   GridWrapper,
-} from 'components/Calendar/Calendar.styles.ts';
+} from './Calendar.styles.ts';
 import { FC } from 'react';
 import { truncateText } from 'helpers/truncateText.ts';
-import { isCurrentDay, isCurrentMonth, isWeekend } from 'helpers/calendarDateCalculations.ts';
+import {
+  isCurrentDay,
+  isCurrentMonth,
+  isWeekend,
+} from 'helpers/calendarDateCalculations.ts';
 import { useAppSelector } from 'hooks/redux-hooks.ts';
-
-interface IEvent {
-  title: string;
-  description: string;
-  date: string;
-  time: string;
-  id?: string;
-  background?: string | undefined;
-}
+import { CalendarHeader } from 'components/CalendarHeader/CalendarHeader.tsx';
+import { IEvent } from 'types/types.ts';
 
 interface ICalendar {
   events: IEvent[];
@@ -41,13 +38,7 @@ export const Calendar: FC<ICalendar> = ({ events, openFormHandler }) => {
   return (
     <>
       <GridWrapper $isHeader>
-        {[...Array(7)].map((_, i) => (
-          <Cells $isHeader key={i} $isCurrentMonth>
-            {dayjs()
-              .day(i + 1)
-              .format('ddd')}
-          </Cells>
-        ))}
+        <CalendarHeader />
       </GridWrapper>
       <GridWrapper>
         {daysArray.map(dayItem => (
