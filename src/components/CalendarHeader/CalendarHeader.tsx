@@ -1,4 +1,4 @@
-import { Cells } from 'components/Calendar/Calendar.styles.ts';
+import { Cells } from 'components/MonthDaysList/MonthDaysList.styles.ts';
 import dayjs from 'dayjs';
 
 export const CalendarHeader = () => {

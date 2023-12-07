@@ -1,6 +1,5 @@
 import {
   Block,
-  ButtonBlock,
   Confirmation,
   Cross,
   ModalBackground,
@@ -8,39 +7,33 @@ import {
   Title,
 } from './Modal.styles.ts';
 import { FC, ReactNode } from 'react';
-import { resetForm } from 'store/slices/calendarSlice.ts';
-import { useAppDispatch } from 'hooks/redux-hooks.ts';
+import { resetForm, setMethod, setModalActive } from 'store/slices/calendarSlice.ts';
+import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks.ts';
 
 interface ModalProps {
-  active: boolean;
-  setActive: (active: boolean) => void;
   children: ReactNode;
   title: string;
-  setMethod: (methodName: string) => void;
 }
 
-export const Modal: FC<ModalProps> = ({
-  active,
-  setActive,
-  children,
-  title,
-  setMethod,
-}) => {
+export const Modal: FC<ModalProps> = ({ children, title }) => {
   const dispatch = useAppDispatch();
+
+  const { modalActive } = useAppSelector(state => state.calendar);
+
   return (
     <ModalBackground
-      $active={String(active)}
+      $active={modalActive}
       onClick={() => {
-        setActive(false);
+        dispatch(setModalActive(false));
         dispatch(resetForm());
-        setMethod('');
+        dispatch(setMethod(''));
       }}>
-      <ModalContent $active={String(active)} onClick={e => e.stopPropagation()}>
+      <ModalContent $active={modalActive} onClick={e => e.stopPropagation()}>
         <Title>
           <Confirmation>{title}</Confirmation>
           <Cross
             onClick={() => {
-              setActive(false);
+              dispatch(setModalActive(false));
               dispatch(resetForm());
               setMethod('');
             }}>
@@ -48,7 +41,6 @@ export const Modal: FC<ModalProps> = ({
           </Cross>
         </Title>
         <Block>{children}</Block>
-        <ButtonBlock></ButtonBlock>
       </ModalContent>
     </ModalBackground>
   );

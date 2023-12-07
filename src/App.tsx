@@ -1,18 +1,23 @@
-import './App.css';
 import dayjs from 'dayjs';
 import 'dayjs/locale/en-gb.js';
 import { Calendar } from 'components/Calendar/Calendar.tsx';
 import { Stack, styled } from '@mui/material';
-import { NavigationCalendar } from 'components/NavigationCalendar/NavigationCalendar.tsx';
+import { CalendarNavigation } from 'components/CalendarNavigation/CalendarNavigation.tsx';
 import { useEffect, useState } from 'react';
 import { Modal } from 'components/Modal/Modal.tsx';
-import { getRandomColor } from './helpers/getRandomColor.ts';
+import { getRandomColor } from 'helpers/getRandomColor.ts';
 import Update from 'assets/update.svg';
 import Remove from 'assets/remove1.svg';
 import theme from 'styles/theme.ts';
 import { IEvent } from 'types/types.ts';
 import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks.ts';
-import { resetForm, setEvent } from 'store/slices/calendarSlice.ts';
+import {
+  resetForm,
+  setEvent,
+  setEvents,
+  setMethod,
+  setModalActive,
+} from 'store/slices/calendarSlice.ts';
 
 const StackStyled = styled(Stack)`
   margin: 50px auto;
@@ -39,7 +44,7 @@ const EventTitle = styled('input')`
 `;
 
 const TitleError = styled('span')`
-  color: red;
+  color: ${theme.colors.error};
   position: absolute;
   left: 0;
   bottom: -20%;
@@ -84,6 +89,19 @@ const UpdateIcon = styled('img')`
   top: 0;
 `;
 
+const EventStatus = styled('span')`
+  color: #9e9e9e;
+  font-size: 0.85rem;
+  font-style: italic;
+`;
+
+const ActionButtonsWrapper = styled('div')`
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+`;
+
 function App() {
   dayjs.locale('en-gb');
 
@@ -92,18 +110,13 @@ function App() {
   // console.log('startDayOfWeek', startDayOfWeek.format('YYYY-MM-DD'));
   // console.log('endDayOfWeek', endDayOfWeek);
 
-  const [modalActive, setModalActive] = useState(false);
-
-  const [events, setEvents] = useState<IEvent[]>(() => {
-    const storedEvents = localStorage.getItem('events');
-    return storedEvents ? JSON.parse(storedEvents) : [];
-  });
-
   const dispatch = useAppDispatch();
 
-  const { event } = useAppSelector(state => state.calendar);
+  const { event, events, method, modalActive } = useAppSelector(
+    state => state.calendar,
+  );
 
-  const [method, setMethod] = useState('');
+  // const [modalActive, setModalActive] = useState(false);
 
   const [titleError, setTitleError] = useState('');
 
@@ -132,26 +145,25 @@ function App() {
         lastUpdatedTime: null,
       };
       localStorage.setItem('events', JSON.stringify([...events, newEvent]));
-      setEvents(prevEvents => [...prevEvents, newEvent]);
+      dispatch(setEvents([...events, newEvent]));
     } else {
       const updatedEvents = structuredClone(events);
-      const updatedEvent = { ...event, lastUpdatedTime: currentTime };
-      updatedEvents[eventIndex] = updatedEvent;
-      setEvents(updatedEvents);
+      updatedEvents[eventIndex] = { ...event, lastUpdatedTime: currentTime };
+      dispatch(setEvents(updatedEvents));
       localStorage.setItem('events', JSON.stringify(updatedEvents));
     }
   };
 
-  const openFormHandler = (methodName: string, eventForEdit: IEvent) => {
-    setMethod(methodName);
-    setModalActive(true);
-    dispatch(setEvent(eventForEdit));
-    setEvents(prevEvents =>
-      prevEvents.map(eventEl =>
-        eventEl.id === eventForEdit.id ? eventForEdit : eventEl,
-      ),
-    );
-  };
+  // const openFormHandler = (methodName: string, eventForEdit: IEvent) => {
+  //   setMethod(methodName);
+  //   setModalActive(true);
+  //   dispatch(setEvent(eventForEdit));
+  //
+  //   const updatedEvent = events.map(eventEl =>
+  //     eventEl.id === eventForEdit.id ? eventForEdit : eventEl,
+  //   );
+  //   dispatch(setEvents(updatedEvent));
+  // };
 
   const eventChangeHandler = (text: string, field: string) => {
     const partialEvent: Partial<IEvent> = { [field]: text };
@@ -168,39 +180,30 @@ function App() {
   const removeEvent = e => {
     e.preventDefault();
     const result = events.filter(eventEl => eventEl.id !== event.id);
-    setEvents(result);
+    dispatch(setEvents(result));
     localStorage.setItem('events', JSON.stringify(result));
-    setModalActive(false);
+    dispatch(setModalActive(false));
   };
 
   return (
     <>
       <StackStyled>
-        <NavigationCalendar
-          setModalActive={setModalActive}
-          // openCreate={openCreate}
-          // method={method}
+        <CalendarNavigation
+        // openCreate={openCreate}
+        // method={method}
         />
-        <Calendar events={events} openFormHandler={openFormHandler} />
+        <Calendar />
       </StackStyled>
-      {modalActive ? (
-        <Modal
-          active={modalActive}
-          setActive={setModalActive}
-          title={method === 'Update' ? 'Edit idea item' : 'Add new idea item'}
-          setMethod={setMethod}>
+
+      <Modal title={method === 'Update' ? 'Edit idea item' : 'Add new idea item'}>
+        {modalActive && (
           <form>
             {method === 'Update' && (
-              <p
-                style={{
-                  color: '#9e9e9e',
-                  fontSize: '0.85rem',
-                  fontStyle: 'italic',
-                }}>
+              <EventStatus>
                 {event.lastUpdatedTime
                   ? `Updated at ${event.lastUpdatedTime}`
                   : `Created at ${event.createdAt}`}
-              </p>
+              </EventStatus>
             )}
             <EventTitleWrapper>
               <EventTitle
@@ -237,13 +240,7 @@ function App() {
             />
             <EventHours>🕒</EventHours>
 
-            <div
-              style={{
-                marginTop: 30,
-                display: 'flex',
-                justifyContent: 'flex-end',
-                gap: 15,
-              }}>
+            <ActionButtonsWrapper>
               {method === 'Update' && (
                 <button onClick={removeEvent}>
                   <img src={Remove} alt="remove icon" />
@@ -255,17 +252,16 @@ function App() {
                 onClick={e => {
                   e.preventDefault();
                   addEvent();
-                  setModalActive(false);
-                  // resetForm();
+                  dispatch(setModalActive(false));
                   dispatch(resetForm());
-                  setMethod('');
+                  dispatch(setMethod(''));
                 }}>
                 SAVE
               </button>
-            </div>
+            </ActionButtonsWrapper>
           </form>
-        </Modal>
-      ) : null}
+        )}
+      </Modal>
     </>
   );
 }

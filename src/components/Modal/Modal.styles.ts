@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
-export const ModalBackground = styled.div<{ $active: string }>`
+export const ModalBackground = styled.div<{
+  $active: boolean;
+}>`
   background: rgba(0, 0, 0, 0.75);
   height: 100%;
   backdrop-filter: blur(10px);
@@ -17,7 +19,9 @@ export const ModalBackground = styled.div<{ $active: string }>`
   transition: 0.5s;
 `;
 
-export const ModalContent = styled.div<{ $active: string }>`
+export const ModalContent = styled.div<{
+  $active: boolean;
+}>`
   display: flex;
   flex-direction: column;
   background-color: white;
@@ -61,16 +65,6 @@ export const Cross = styled.button`
     transform: scale(1.1);
     opacity: 1;
   }
-`;
-
-export const ButtonBlock = styled.div`
-  display: flex;
-  justify-content: center;
-  height: 40px;
-  background: #f2f2f2;
-  border-end-end-radius: 11px;
-  border-end-start-radius: 11px;
-  align-items: center;
 `;
 
 export const Block = styled.div`

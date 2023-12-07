@@ -15,6 +15,7 @@ const theme = {
   },
   shadows: {
     primary: '0px 0px 0px 1px #b7caf3, 0px 8px 20px 6px #888',
+    secondary: 'rgba(0, 0, 0, 0.08) 0 0 0 1px, rgba(0, 0, 0, 0.3) 0 4px 4px 0',
   },
 };
 

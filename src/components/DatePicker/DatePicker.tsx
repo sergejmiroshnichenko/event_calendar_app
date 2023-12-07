@@ -9,7 +9,7 @@ import {
   NavigationBlock,
   PickerWrapper,
 } from './DatePicker.styles.ts';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import CalendarTodayIcon from 'assets/calendar.svg';
 
 export const DatePicker: FC = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -52,13 +52,19 @@ export const DatePicker: FC = () => {
       {showDatePicker ? (
         <CalenderContainer>
           <NavigationBlock>
-            <ButtonNavigation onClick={prevYearHandler}>{'<'}</ButtonNavigation>
+            <ButtonNavigation onClick={prevYearHandler}>
+              {<i className="fas fa-angle-left"></i>}
+            </ButtonNavigation>
             <h4>{selectedDate.format('YYYY')}</h4>
-            <ButtonNavigation onClick={nextYearHandler}>{'>'}</ButtonNavigation>
+            <ButtonNavigation onClick={nextYearHandler}>
+              {<i id="right" className="fas fa-angle-right"></i>}
+            </ButtonNavigation>
           </NavigationBlock>
 
           <NavigationBlock>
-            <ButtonNavigation onClick={prevMonthHandler}>{'<'}</ButtonNavigation>
+            <ButtonNavigation onClick={prevMonthHandler}>
+              {<i className="fas fa-angle-left"></i>}
+            </ButtonNavigation>
             <select
               value={selectedDate.month()}
               onChange={e => handleMonthChange(+e.target.value)}
@@ -69,12 +75,14 @@ export const DatePicker: FC = () => {
                 </option>
               ))}
             </select>
-            <ButtonNavigation onClick={nextMonthHandler}>{'>'}</ButtonNavigation>
+            <ButtonNavigation onClick={nextMonthHandler}>
+              {<i id="right" className="fas fa-angle-right"></i>}
+            </ButtonNavigation>
           </NavigationBlock>
         </CalenderContainer>
       ) : (
         <IconBox>
-          <CalendarTodayIcon />
+          <img src={CalendarTodayIcon} alt="calendar icon" />
         </IconBox>
       )}
     </PickerWrapper>
