@@ -32,6 +32,7 @@ export const CalendarNavigation: FC<HeaderProps> = () =>
   const nextMonthHandler = () => {
     dispatch(setSelectedDate(selectedDate.add(1, 'month')));
   };
+
   const currentMonthHandler = () => {
     dispatch(setSelectedDate(dayjs()));
   };
@@ -49,7 +50,7 @@ export const CalendarNavigation: FC<HeaderProps> = () =>
         <i className="fas fa-angle-left"></i>
       </ButtonNavigation>
       <CurrentMonthButton onClick={currentMonthHandler}>
-        {selectedDate.format('MMMM YYYY')}
+        {localStorage.getItem('selectedDate') || dayjs().format('MMMM YYYY')}
       </CurrentMonthButton>
       <ButtonNavigation onClick={nextMonthHandler}>
         <i id="right" className="fas fa-angle-right"></i>

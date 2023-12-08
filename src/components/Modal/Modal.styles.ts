@@ -1,9 +1,10 @@
 import styled from 'styled-components';
+import theme from 'styles/theme.ts';
 
 export const ModalBackground = styled.div<{
   $active: boolean;
 }>`
-  background: rgba(0, 0, 0, 0.75);
+  background: ${theme.colors.overlay};
   height: 100%;
   backdrop-filter: blur(10px);
   position: fixed;
@@ -24,14 +25,14 @@ export const ModalContent = styled.div<{
 }>`
   display: flex;
   flex-direction: column;
-  background-color: white;
-  border: burlywood solid 4px;
+  background-color: ${theme.colors.whiteDefault};
+  border: ${theme.colors.modalContent} solid 4px;
   border-radius: 10px;
   max-width: 22%;
   margin: auto;
   transition: 0.4s all;
   transform: ${({ $active }) => ($active ? 'scale(1)' : 'scale(0.5)')};
-  width: 600px;
+  width: 100%;
   height: 400px;
   overflow: auto;
 `;
@@ -41,14 +42,14 @@ export const Title = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0 15px;
-  background: #f2f2f2;
+  background: ${theme.colors.lightGray};
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 `;
 
 export const Confirmation = styled.div`
   font-weight: 500;
-  color: #3f5f79;
+  color: ${theme.colors.modalConfirm};
   margin: 0;
   padding: 10px 0;
   font-size: 18px;

@@ -27,20 +27,17 @@
       "types/*": [
         "types/*"
       ],
-      "routes/*": [
-        "routes/*"
-      ],
-      "pages/*": [
-        "pages/*"
-      ],
       "assets/*": [
         "assets/*"
       ],
       "store/*": [
         "store/*"
       ],
-      "services/*": [
-        "services/*"
+      "helpers/*": [
+        "helpers/*"
+      ],
+      "styles/*": [
+        "styles/*"
       ]
     },
     /* Linting */

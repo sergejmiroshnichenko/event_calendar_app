@@ -23,12 +23,12 @@ export const ButtonCreate = styled.button`
   justify-content: center;
   font-size: 25px;
   padding: 0;
-  background: #00b0ff;
-  color: white;
+  background: ${theme.colors.buttonCreate};
+  color: ${theme.colors.whiteDefault};
 `;
 
-export const HeaderWrapper = styled.header`
-  background: #efebe9;
+export const HeaderWrapper = styled.div`
+  background: ${theme.colors.headerWrap};
   display: flex;
   align-items: center;
   padding: 15px 10px;
@@ -40,7 +40,7 @@ export const ButtonNavigation = styled.button`
   background: transparent;
   padding: 0.2em 0.7em;
   border-radius: 7px;
-  border: 1px solid #9e9e9e;
+  border: 1px solid ${theme.colors.darkGrey};
   opacity: 0.7;
 `;
 

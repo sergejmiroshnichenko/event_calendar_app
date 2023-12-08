@@ -12,10 +12,10 @@ import {
   isWeekend,
 } from 'helpers/calendarDateCalculations.ts';
 import { truncateText } from 'helpers/truncateText.ts';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks.ts';
 import { IEvent } from 'types/types.ts';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
   setEvent,
   setEvents,
@@ -26,15 +26,27 @@ import {
 export const MonthDaysList: FC = () => {
   const { selectedDate, events } = useAppSelector(state => state.calendar);
 
-  const totalDays = 42;
-
-  const startDayOfWeek = selectedDate.clone().startOf('month').startOf('week');
-
-  const daysArray = Array.from({ length: totalDays }, (_, index) =>
-    startDayOfWeek.add(index, 'day'),
-  );
+  const [daysArray, setDaysArray] = useState<Dayjs[]>([]);
 
   const dispatch = useAppDispatch();
+
+  const totalDays = 42;
+
+  const storedSelectedDate = localStorage.getItem('selectedDate'); // December 2023
+
+  const parsedStoredDate = storedSelectedDate
+    ? dayjs(`${storedSelectedDate} 1`, 'MMMM D YYYY') // Dec 01 2023
+    : dayjs();
+
+  useEffect(() => {
+    const startDayOfWeek = parsedStoredDate.clone().startOf('month').startOf('week');
+
+    const newValue = Array.from({ length: totalDays }, (_, index) =>
+      startDayOfWeek.add(index, 'day'),
+    );
+
+    setDaysArray(newValue);
+  }, [selectedDate]);
 
   const openFormHandler = (methodName: string, eventForEdit: IEvent) => {
     dispatch(setMethod(methodName));

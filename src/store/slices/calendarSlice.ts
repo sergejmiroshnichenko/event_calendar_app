@@ -47,6 +47,7 @@ const calendarSlice = createSlice({
     },
     setSelectedDate: (state, action: PayloadAction<Dayjs>) => {
       state.selectedDate = action.payload;
+      localStorage.setItem('selectedDate', action.payload.format('MMMM YYYY'));
     },
     setMethod: (state, action: PayloadAction<string>) => {
       state.method = action.payload;

@@ -47,6 +47,12 @@ export const DatePicker: FC = () => {
     setShowDatePicker(true);
   };
 
+  const selected = localStorage.getItem('selectedDate');
+  const monthPicker = selected?.split(' ')[0];
+  const yearPicker = selected?.split(' ')[1];
+  console.log('yearPicker', yearPicker);
+  console.log('monthPicker', monthPicker);
+
   return (
     <PickerWrapper onClick={openCalendar}>
       {showDatePicker ? (
@@ -55,7 +61,7 @@ export const DatePicker: FC = () => {
             <ButtonNavigation onClick={prevYearHandler}>
               {<i className="fas fa-angle-left"></i>}
             </ButtonNavigation>
-            <h4>{selectedDate.format('YYYY')}</h4>
+            <h4>{yearPicker || selectedDate.format('YYYY')}</h4>
             <ButtonNavigation onClick={nextYearHandler}>
               {<i id="right" className="fas fa-angle-right"></i>}
             </ButtonNavigation>

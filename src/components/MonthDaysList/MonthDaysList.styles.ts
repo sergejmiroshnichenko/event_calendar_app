@@ -30,11 +30,11 @@ export const CurrentDay = styled.span`
   align-items: center;
   font-weight: 600;
   margin: -5px;
-  border: 1px solid white;
+  border: 1px solid ${theme.colors.whiteDefault};
   z-index: 1;
   position: relative;
-  background: #ffab91;
-  color: black;
+  background: ${theme.colors.currentDay};
+  color: ${theme.colors.blackDefault};
   box-shadow: ${theme.shadows.secondary};
 `;
 
@@ -49,12 +49,12 @@ export const EventItemWrapper = styled.button<{
   $bg: string | undefined;
 }>`
   background: ${({ $bg }) => $bg};
-  color: black;
+  color: ${theme.colors.blackDefault};
   padding: 1px 5px;
   opacity: 0.6;
   font-size: 14px;
   font-weight: 500;
-  border: 0.0625rem solid #f8f8f8;
+  border: 0.0625rem solid ${theme.colors.whiteDefault};
   border-radius: 0.5rem;
   box-shadow: ${theme.shadows.secondary};
   word-break: break-all;

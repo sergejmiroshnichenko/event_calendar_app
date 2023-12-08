@@ -1,4 +1,5 @@
 import { styled } from 'styled-components';
+import theme from 'styles/theme.ts';
 
 const navigationStyles = `
   display: flex;
@@ -8,9 +9,6 @@ const navigationStyles = `
 
 export const NavigationBlock = styled.div`
   ${navigationStyles}
-  &.select :checked {
-    background: pink;
-  }
 `;
 
 export const CalenderContainer = styled.div`
@@ -25,20 +23,20 @@ export const ButtonNavigation = styled.button`
   background: transparent;
   padding: 0.2em 0.7em;
   border-radius: 7px;
-  border: 1px solid #9e9e9e;
+  border: 1px solid ${theme.colors.darkGrey};
   opacity: 0.7;
 
   &:hover {
-    background: #e0e0e0;
+    background: ${theme.colors.hoverNav};
   }
 `;
 
 export const IconBox = styled.button`
   background: transparent;
-  border: 1px solid #9e9e9e;
+  border: 1px solid ${theme.colors.darkGrey};
   padding: 0.2em 0.4em;
 
   &:hover {
-    background: #e0e0e0;
+    background: ${theme.colors.darkGrey};
   }
 `;
