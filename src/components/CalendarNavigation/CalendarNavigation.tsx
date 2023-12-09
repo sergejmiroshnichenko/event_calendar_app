@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks.ts';
+import { useAppDispatch } from 'hooks/redux-hooks.ts';
 import { setModalActive, setSelectedDate } from 'store/slices/calendarSlice.ts';
 import dayjs from 'dayjs';
 import { DatePicker } from 'components/DatePicker/DatePicker.tsx';
@@ -19,18 +19,20 @@ export const CalendarNavigation: FC<HeaderProps> = () =>
 // openCreate,
 // method,
 {
-  // const startDayOfWeek = today.clone().startOf('month').format('MMMM YYYY');
-
-  const { selectedDate } = useAppSelector(state => state.calendar);
-
   const dispatch = useAppDispatch();
 
+  const storedSelectedDate = localStorage.getItem('selectedDate'); // December 2023
+
+  const parsedStoredDate = storedSelectedDate
+    ? dayjs(`${storedSelectedDate} 1`, 'MMMM D YYYY') // Dec 01 2023
+    : dayjs();
+
   const prevMonthHandler = () => {
-    dispatch(setSelectedDate(selectedDate.subtract(1, 'month')));
+    dispatch(setSelectedDate(parsedStoredDate.subtract(1, 'month')));
   };
 
   const nextMonthHandler = () => {
-    dispatch(setSelectedDate(selectedDate.add(1, 'month')));
+    dispatch(setSelectedDate(parsedStoredDate.add(1, 'month')));
   };
 
   const currentMonthHandler = () => {
@@ -50,7 +52,7 @@ export const CalendarNavigation: FC<HeaderProps> = () =>
         <i className="fas fa-angle-left"></i>
       </ButtonNavigation>
       <CurrentMonthButton onClick={currentMonthHandler}>
-        {localStorage.getItem('selectedDate') || dayjs().format('MMMM YYYY')}
+        {storedSelectedDate || dayjs().format('MMMM YYYY')}
       </CurrentMonthButton>
       <ButtonNavigation onClick={nextMonthHandler}>
         <i id="right" className="fas fa-angle-right"></i>

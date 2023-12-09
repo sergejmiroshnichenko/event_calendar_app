@@ -16,26 +16,32 @@ export const DatePicker: FC = () => {
 
   const { selectedDate } = useAppSelector(state => state.calendar);
 
+  const storedSelectedDate = localStorage.getItem('selectedDate'); // December 2023
+
+  const parsedStoredDate = storedSelectedDate
+    ? dayjs(`${storedSelectedDate} 1`, 'MMMM D YYYY') // Dec 01 2023
+    : dayjs();
+
   const prevMonthHandler = () => {
-    dispatch(setSelectedDate(selectedDate.subtract(1, 'month')));
+    dispatch(setSelectedDate(parsedStoredDate.subtract(1, 'month')));
   };
 
   const nextMonthHandler = () => {
-    dispatch(setSelectedDate(selectedDate.add(1, 'month')));
+    dispatch(setSelectedDate(parsedStoredDate.add(1, 'month')));
   };
 
   const dispatch = useAppDispatch();
 
   const nextYearHandler = () => {
-    dispatch(setSelectedDate(selectedDate.add(1, 'year')));
+    dispatch(setSelectedDate(parsedStoredDate.add(1, 'year')));
   };
 
   const prevYearHandler = () => {
-    dispatch(setSelectedDate(selectedDate.subtract(1, 'year')));
+    dispatch(setSelectedDate(parsedStoredDate.subtract(1, 'year')));
   };
 
   const handleMonthChange = (monthIndex: number) => {
-    const newDate = selectedDate.month(monthIndex);
+    const newDate = parsedStoredDate.month(monthIndex);
     dispatch(setSelectedDate(newDate));
   };
 
@@ -47,11 +53,8 @@ export const DatePicker: FC = () => {
     setShowDatePicker(true);
   };
 
-  const selected = localStorage.getItem('selectedDate');
-  const monthPicker = selected?.split(' ')[0];
-  const yearPicker = selected?.split(' ')[1];
-  console.log('yearPicker', yearPicker);
-  console.log('monthPicker', monthPicker);
+  const monthPicker = dayjs(`${storedSelectedDate} 1`, 'MMMM D YYYY').month();
+  const yearPicker = storedSelectedDate?.split(' ')[1];
 
   return (
     <PickerWrapper onClick={openCalendar}>
@@ -71,8 +74,9 @@ export const DatePicker: FC = () => {
             <ButtonNavigation onClick={prevMonthHandler}>
               {<i className="fas fa-angle-left"></i>}
             </ButtonNavigation>
+
             <select
-              value={selectedDate.month()}
+              value={monthPicker ? monthPicker : selectedDate.month()}
               onChange={e => handleMonthChange(+e.target.value)}
               onBlur={closeCalendar}>
               {[...Array(12)].map((_, i) => (
@@ -81,6 +85,7 @@ export const DatePicker: FC = () => {
                 </option>
               ))}
             </select>
+
             <ButtonNavigation onClick={nextMonthHandler}>
               {<i id="right" className="fas fa-angle-right"></i>}
             </ButtonNavigation>

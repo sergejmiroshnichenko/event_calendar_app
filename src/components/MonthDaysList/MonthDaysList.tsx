@@ -24,9 +24,9 @@ import {
 } from 'store/slices/calendarSlice.ts';
 
 export const MonthDaysList: FC = () => {
-  const { selectedDate, events } = useAppSelector(state => state.calendar);
-
   const [daysArray, setDaysArray] = useState<Dayjs[]>([]);
+
+  const { selectedDate, events } = useAppSelector(state => state.calendar);
 
   const dispatch = useAppDispatch();
 
