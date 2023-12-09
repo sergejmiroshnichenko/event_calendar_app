@@ -2,11 +2,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/en-gb.js';
 import { IEvent } from 'types/types.ts';
+import { getParsedStoredDate } from 'helpers/calendarDateCalc.ts';
 
 dayjs.locale('en-gb');
 
 const storedEvents = localStorage.getItem('events');
 const initialEvents = storedEvents ? JSON.parse(storedEvents) : [];
+
+const parsedStoredDate = getParsedStoredDate();
 
 interface ICalendar {
   event: IEvent;
@@ -24,7 +27,7 @@ const initialState: ICalendar = {
     time: '',
   },
   events: initialEvents,
-  selectedDate: dayjs(),
+  selectedDate: parsedStoredDate,
   method: '',
   modalActive: false,
 };

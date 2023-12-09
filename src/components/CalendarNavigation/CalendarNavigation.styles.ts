@@ -31,6 +31,7 @@ export const HeaderWrapper = styled.div`
   background: ${theme.colors.headerWrap};
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 15px 10px;
   border-start-start-radius: 7px;
   border-start-end-radius: 7px;
@@ -46,4 +47,9 @@ export const ButtonNavigation = styled.button`
 
 export const CurrentMonthButton = styled(ButtonWrapper)`
   padding: 0 8px;
+`;
+
+export const NavigationContainer = styled.div`
+  display: flex;
+  align-items: center;
 `;

@@ -6,11 +6,12 @@ import {
   EventListWrapper,
 } from './MonthDaysList.styles.ts';
 import {
+  getParsedStoredDate,
   isCurrentDay,
   isCurrentMonth,
   isDayContainCurrentEvent,
   isWeekend,
-} from 'helpers/calendarDateCalculations.ts';
+} from 'helpers/calendarDateCalc.ts';
 import { truncateText } from 'helpers/truncateText.ts';
 import dayjs, { Dayjs } from 'dayjs';
 import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks.ts';
@@ -32,11 +33,7 @@ export const MonthDaysList: FC = () => {
 
   const totalDays = 42;
 
-  const storedSelectedDate = localStorage.getItem('selectedDate'); // December 2023
-
-  const parsedStoredDate = storedSelectedDate
-    ? dayjs(`${storedSelectedDate} 1`, 'MMMM D YYYY') // Dec 01 2023
-    : dayjs();
+  const parsedStoredDate = getParsedStoredDate();
 
   useEffect(() => {
     const startDayOfWeek = parsedStoredDate.clone().startOf('month').startOf('week');

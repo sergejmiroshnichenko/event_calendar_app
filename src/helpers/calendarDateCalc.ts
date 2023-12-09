@@ -14,11 +14,13 @@ export const isDayContainCurrentEvent = (event: IEvent, dayItem: Dayjs) =>
   dayjs(event.date).unix() >= dayItem.unix() &&
   dayjs(event.date).unix() <= dayItem.clone().endOf('day').unix();
 
-export const getStoredSelectedDate = (): string => {
-  const storedDate = localStorage.getItem('selectedDate');
-  return storedDate ? storedDate : dayjs().format('MMMM YYYY');
+export const getStoredSelectedDate = () => {
+  return localStorage.getItem('selectedDate');
 }; // December 2023
 
-export const parsedStoredDate = getStoredSelectedDate()
-  ? dayjs(`${getStoredSelectedDate()} 1`, 'MMMM D YYYY') // Dec 01 2023
-  : dayjs();
+export const getParsedStoredDate = () => {
+  const storedSelectedDate = localStorage.getItem('selectedDate');
+  return storedSelectedDate
+    ? dayjs(`${storedSelectedDate} 1`, 'MMMM D YYYY')
+    : dayjs();
+}; // December 1 2023

@@ -1,7 +1,3 @@
-import { FC, useState } from 'react';
-import dayjs from 'dayjs';
-import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks.ts';
-import { setSelectedDate } from 'store/slices/calendarSlice.ts';
 import {
   ButtonNavigation,
   CalenderContainer,
@@ -9,18 +5,20 @@ import {
   NavigationBlock,
   PickerWrapper,
 } from './DatePicker.styles.ts';
+import { FC, useState } from 'react';
+import dayjs from 'dayjs';
+import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks.ts';
+import { setSelectedDate } from 'store/slices/calendarSlice.ts';
 import CalendarTodayIcon from 'assets/calendar.svg';
+import { getParsedStoredDate, getStoredSelectedDate } from 'helpers/calendarDateCalc.ts';
 
 export const DatePicker: FC = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const { selectedDate } = useAppSelector(state => state.calendar);
 
-  const storedSelectedDate = localStorage.getItem('selectedDate'); // December 2023
-
-  const parsedStoredDate = storedSelectedDate
-    ? dayjs(`${storedSelectedDate} 1`, 'MMMM D YYYY') // Dec 01 2023
-    : dayjs();
+  const storedSelectedDate = getStoredSelectedDate();
+  const parsedStoredDate = getParsedStoredDate();
 
   const prevMonthHandler = () => {
     dispatch(setSelectedDate(parsedStoredDate.subtract(1, 'month')));
