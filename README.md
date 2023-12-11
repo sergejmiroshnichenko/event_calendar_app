@@ -1,30 +1,35 @@
-# React + TypeScript + Vite
+# Event calendar app
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Requirements
+- Node.js (recommended ver: 16.16.0)
 
-Currently, two official plugins are available:
+To run the application locally, clone the repository, install the dependencies, and run the application.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Run the following commands:
+1. git clone [https://github.com/sergejmiroshnichenko/news_app_bintime.git](https://github.com/sergejmiroshnichenko/event_calendar_app)
+2. npm install
+3. npm run dev
 
-## Expanding the ESLint configuration
+##   Project Description:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+The project is a event calendar application.
 
-- Configure the top-level `parserOptions` property like this:
+The application consists of two main pages:
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+- **Article list page:**
+        Contains a table with columns to display image, title, author, publication date and news source link.
+        Also provides a field to search for articles by key headline and the ability to select filters by country and news category.
+- **Article preview page:**
+    Provides details about the selected article.
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Functionality includes the ability to search for articles by keyword, filter news articles by country and category, and provide detailed information about a particular article when browsing.
+
+## Libraries and tools
+
+The project uses the following main libraries and tools:
+
+- **react** (ver. 18.2.0) и **react-dom** (ver. 18.2.0): Basic libraries for creating UI.
+- **typescript** (ver. ^5.0.2"): Provides static typing for JavaScript. It is used to increase the reliability of development and the ability to detect run-time errors.
+- **@reduxjs/toolkit** (ver. 1.9.7): Used to manage the global state of the application.
+- **styled-components** (ver. 6.1.1): A library for creating styles using components.
+- **dayjs** (ver. 1.11.10): A library for work with dates and times, providing convenient methods for processing them.
