@@ -1,9 +1,9 @@
 import {
+  ActionButton,
   ActionButtonsWrapper,
   EventDate,
   EventDescription,
   EventDescriptionWrapper,
-  EventHours,
   EventStatus,
   EventTime,
   EventTitle,
@@ -126,16 +126,15 @@ export const FormEvent = () => {
         placeholder={'Begin time'}
         onChange={({ target }) => eventChangeHandler(target.value, 'time')}
       />
-      <EventHours>🕒</EventHours>
 
       <ActionButtonsWrapper>
         {method === 'Update' && (
-          <button onClick={removeEvent}>
+          <ActionButton onClick={removeEvent}>
             <img src={Remove} alt="remove icon" />
-          </button>
+          </ActionButton>
         )}
 
-        <button
+        <ActionButton
           disabled={!isFormValid}
           onClick={e => {
             e.preventDefault();
@@ -145,7 +144,7 @@ export const FormEvent = () => {
             dispatch(setMethod(''));
           }}>
           SAVE
-        </button>
+        </ActionButton>
       </ActionButtonsWrapper>
     </form>
   );

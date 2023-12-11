@@ -20,24 +20,10 @@ function App() {
 
   const { method, modalActive } = useAppSelector(state => state.calendar);
 
-  // const openFormHandler = (methodName: string, eventForEdit: IEvent) => {
-  //   setMethod(methodName);
-  //   setModalActive(true);
-  //   dispatch(setEvent(eventForEdit));
-  //
-  //   const updatedEvent = events.map(eventEl =>
-  //     eventEl.id === eventForEdit.id ? eventForEdit : eventEl,
-  //   );
-  //   dispatch(setEvents(updatedEvent));
-  // };
-
   return (
     <>
       <CalendarWrapper>
-        <CalendarNavigation
-        // openCreate={openCreate}
-        // method={method}
-        />
+        <CalendarNavigation />
         <Calendar />
       </CalendarWrapper>
 

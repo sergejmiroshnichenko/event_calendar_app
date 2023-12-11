@@ -35,7 +35,7 @@ export const Modal: FC<ModalProps> = ({ children, title }) => {
             onClick={() => {
               dispatch(setModalActive(false));
               dispatch(resetForm());
-              setMethod('');
+              dispatch(setMethod(''));
             }}>
             &times;
           </Cross>

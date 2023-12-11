@@ -1,9 +1,11 @@
 import {
   ButtonCreate,
   ButtonNavigation,
-  CurrentMonthButton,
+  DateContainer,
   HeaderWrapper,
   NavigationContainer,
+  NavigationWrapper,
+  TodayButton,
 } from './CalendarNavigation.styles.ts';
 import { FC } from 'react';
 import { useAppDispatch } from 'hooks/redux-hooks.ts';
@@ -26,12 +28,8 @@ export const CalendarNavigation: FC<HeaderProps> = () =>
   const storedSelectedDate = getStoredSelectedDate();
   const parsedStoredDate = getParsedStoredDate();
 
-  const prevMonthHandler = () => {
-    dispatch(setSelectedDate(parsedStoredDate.subtract(1, 'month')));
-  };
-
-  const nextMonthHandler = () => {
-    dispatch(setSelectedDate(parsedStoredDate.add(1, 'month')));
+  const handleMonthSwitching = (stepMonth: number) => {
+    dispatch(setSelectedDate(parsedStoredDate.add(stepMonth, 'month')));
   };
 
   const currentMonthHandler = () => {
@@ -45,21 +43,29 @@ export const CalendarNavigation: FC<HeaderProps> = () =>
           dispatch(setModalActive(true));
           // openCreate('Create');
         }}>
-        {/*{method}*/}+
+        {/*{method}*/}
+        <i className="fas fa-plus"></i>
       </ButtonCreate>
 
       <NavigationContainer>
-        <ButtonNavigation onClick={prevMonthHandler}>
-          <i className="fas fa-angle-left"></i>
-        </ButtonNavigation>
+        <TodayButton
+          disabled={dayjs().format('MMMM YYYY') === storedSelectedDate}
+          onClick={currentMonthHandler}>
+            Today
+        </TodayButton>
+        <NavigationWrapper>
+          <ButtonNavigation onClick={() => handleMonthSwitching(-1)}>
+            <i className="fas fa-angle-left"></i>
+          </ButtonNavigation>
 
-        <CurrentMonthButton onClick={currentMonthHandler}>
-          {storedSelectedDate || dayjs().format('MMMM YYYY')}
-        </CurrentMonthButton>
+          <DateContainer>
+            <h3>{storedSelectedDate || dayjs().format('MMMM YYYY')}</h3>
+          </DateContainer>
 
-        <ButtonNavigation onClick={nextMonthHandler}>
-          <i id="right" className="fas fa-angle-right"></i>
-        </ButtonNavigation>
+          <ButtonNavigation onClick={() => handleMonthSwitching(1)}>
+            <i className="fas fa-angle-right"></i>
+          </ButtonNavigation>
+        </NavigationWrapper>
 
         <DatePicker />
       </NavigationContainer>

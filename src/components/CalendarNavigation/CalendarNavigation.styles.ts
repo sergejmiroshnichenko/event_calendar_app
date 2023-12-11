@@ -1,30 +1,23 @@
 import { styled } from 'styled-components';
 import theme from 'styles/theme.ts';
 
-export const ButtonWrapper = styled.button`
-  border: unset;
-  height: 20px;
-  font-weight: bold;
-  border-radius: 4px;
-  background: transparent;
-  display: flex;
-  align-items: center;
-  outline: unset;
-  padding: 0;
-  margin: 0;
-`;
-
 export const ButtonCreate = styled.button`
   border-radius: 50%;
   width: 35px;
   height: 35px;
   box-shadow: ${theme.shadows.secondary};
-  display: flex;
   justify-content: center;
-  font-size: 25px;
-  padding: 0;
+  transition: transform 0.3s ease-in-out;
+  font-size: 14px;
+  align-items: center;
   background: ${theme.colors.buttonCreate};
   color: ${theme.colors.whiteDefault};
+
+  &:hover,
+  &:focus {
+    background: ${theme.colors.blueSecondary};
+    border: 1px solid ${theme.colors.blueSecondary};
+  }
 `;
 
 export const HeaderWrapper = styled.div`
@@ -39,17 +32,46 @@ export const HeaderWrapper = styled.div`
 
 export const ButtonNavigation = styled.button`
   background: transparent;
-  padding: 0.2em 0.7em;
-  border-radius: 7px;
-  border: 1px solid ${theme.colors.darkGrey};
-  opacity: 0.7;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+
+  &:hover,
+  &:focus {
+    border-radius: 50%;
+    border: 1px solid ${theme.colors.darkGrey};
+  }
 `;
 
-export const CurrentMonthButton = styled(ButtonWrapper)`
-  padding: 0 8px;
+export const TodayButton = styled.button`
+  background: ${theme.colors.lightGray};
+  padding: 0.5em 1em;
+  height: 35px;
+
+  &:hover,
+  &:focus {
+    background: #d7ccc8;
+  }
 `;
 
 export const NavigationContainer = styled.div`
   display: flex;
   align-items: center;
+  gap: 20px;
+  overflow: hidden;
+`;
+
+export const DateContainer = styled.span`
+  width: 150px;
+  text-align: center;
+  margin: 0 3px;
+`;
+
+export const NavigationWrapper = styled.div`
+  display: flex;
+  align-items: baseline;
+  letter-spacing: 0.01em;
 `;

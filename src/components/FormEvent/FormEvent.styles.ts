@@ -44,12 +44,6 @@ export const EventTime = styled.input`
   margin-left: 15%;
 `;
 
-export const EventHours = styled.span`
-  position: absolute;
-  right: 5%;
-  margin-left: 10%;
-`;
-
 export const EventDescriptionWrapper = styled.div`
   position: relative;
 `;
@@ -75,4 +69,11 @@ export const ActionButtonsWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: 15px;
+`;
+
+export const ActionButton = styled.button`
+  padding: 0.5em 1em;
+  background: ${theme.colors.bgDefault};
+  height: 40px;
+  align-items: center;
 `;

@@ -1,15 +1,17 @@
 import {
   ButtonNavigation,
-  CalenderContainer,
   IconBox,
   NavigationBlock,
+  PickerContainer,
   PickerWrapper,
+  SelectMonth,
+  YearInfo,
 } from './DatePicker.styles.ts';
-import { FC, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks.ts';
 import { setSelectedDate } from 'store/slices/calendarSlice.ts';
-import CalendarTodayIcon from 'assets/calendar.svg';
+import DatePickerIcon from 'assets/datePicker.svg';
 import { getParsedStoredDate, getStoredSelectedDate } from 'helpers/calendarDateCalc.ts';
 
 export const DatePicker: FC = () => {
@@ -17,81 +19,87 @@ export const DatePicker: FC = () => {
 
   const { selectedDate } = useAppSelector(state => state.calendar);
 
-  const storedSelectedDate = getStoredSelectedDate();
-  const parsedStoredDate = getParsedStoredDate();
-
-  const prevMonthHandler = () => {
-    dispatch(setSelectedDate(parsedStoredDate.subtract(1, 'month')));
-  };
-
-  const nextMonthHandler = () => {
-    dispatch(setSelectedDate(parsedStoredDate.add(1, 'month')));
-  };
+  const datePickerRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useAppDispatch();
 
-  const nextYearHandler = () => {
-    dispatch(setSelectedDate(parsedStoredDate.add(1, 'year')));
-  };
-
-  const prevYearHandler = () => {
-    dispatch(setSelectedDate(parsedStoredDate.subtract(1, 'year')));
-  };
-
-  const handleMonthChange = (monthIndex: number) => {
-    const newDate = parsedStoredDate.month(monthIndex);
-    dispatch(setSelectedDate(newDate));
-  };
-
-  const closeCalendar = () => {
-    setShowDatePicker(false);
-  };
-
-  const openCalendar = () => {
-    setShowDatePicker(true);
-  };
+  const storedSelectedDate = getStoredSelectedDate();
+  const parsedStoredDate = getParsedStoredDate();
 
   const monthPicker = dayjs(`${storedSelectedDate} 1`, 'MMMM D YYYY').month();
   const yearPicker = storedSelectedDate?.split(' ')[1];
 
+  const handleMonthSwitching = (stepMonth: number) => {
+    dispatch(setSelectedDate(parsedStoredDate.add(stepMonth, 'month')));
+  };
+
+  const handleYearSwitching = (stepYear: number) => {
+    dispatch(setSelectedDate(parsedStoredDate.add(stepYear, 'year')));
+  };
+
+  const handleMonthSelect = (monthIndex: number) => {
+    const newDate = parsedStoredDate.month(monthIndex);
+    dispatch(setSelectedDate(newDate));
+  };
+
+  const openDatePicker = () => {
+    setShowDatePicker(true);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        datePickerRef.current &&
+        !datePickerRef.current.contains(event.target as Node)
+      ) {
+        setShowDatePicker(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <PickerWrapper onClick={openCalendar}>
+    <PickerWrapper onClick={openDatePicker}>
       {showDatePicker ? (
-        <CalenderContainer>
+        <PickerContainer ref={datePickerRef}>
           <NavigationBlock>
-            <ButtonNavigation onClick={prevYearHandler}>
+            <ButtonNavigation onClick={() => handleYearSwitching(-1)}>
               {<i className="fas fa-angle-left"></i>}
             </ButtonNavigation>
-            <h4>{yearPicker || selectedDate.format('YYYY')}</h4>
-            <ButtonNavigation onClick={nextYearHandler}>
+            <YearInfo>{yearPicker || selectedDate.format('YYYY')}</YearInfo>
+            <ButtonNavigation onClick={() => handleYearSwitching(1)}>
               {<i id="right" className="fas fa-angle-right"></i>}
             </ButtonNavigation>
           </NavigationBlock>
 
           <NavigationBlock>
-            <ButtonNavigation onClick={prevMonthHandler}>
-              {<i className="fas fa-angle-left"></i>}
+            <ButtonNavigation onClick={() => handleMonthSwitching(-1)}>
+              <i className="fas fa-angle-left"></i>
             </ButtonNavigation>
 
-            <select
+            <SelectMonth
               value={monthPicker ? monthPicker : selectedDate.month()}
-              onChange={e => handleMonthChange(+e.target.value)}
-              onBlur={closeCalendar}>
+              onChange={e => handleMonthSelect(+e.target.value)}>
               {[...Array(12)].map((_, i) => (
                 <option key={i} value={i}>
                   {dayjs().month(i).format('MMMM')}
                 </option>
               ))}
-            </select>
+            </SelectMonth>
 
-            <ButtonNavigation onClick={nextMonthHandler}>
-              {<i id="right" className="fas fa-angle-right"></i>}
+            <ButtonNavigation onClick={() => handleMonthSwitching(1)}>
+              <i className="fas fa-angle-right"></i>
             </ButtonNavigation>
           </NavigationBlock>
-        </CalenderContainer>
+        </PickerContainer>
       ) : (
         <IconBox>
-          <img src={CalendarTodayIcon} alt="calendar icon" />
+          <img src={DatePickerIcon} alt="calendar icon" />
         </IconBox>
       )}
     </PickerWrapper>

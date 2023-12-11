@@ -8,27 +8,34 @@ const navigationStyles = `
 `;
 
 export const NavigationBlock = styled.div`
-  ${navigationStyles}
+  ${navigationStyles};
+  border: 1px solid #9e9e9e;
+  border-radius: 15px;
+  overflow: hidden;
 `;
 
-export const CalenderContainer = styled.div`
+export const PickerContainer = styled.div`
   background: transparent;
   display: flex;
-  gap: 5%;
+  gap: 5px;
 `;
 
 export const PickerWrapper = styled.div``;
 
 export const ButtonNavigation = styled.button`
   background: transparent;
-  padding: 0.2em 0.7em;
-  border-radius: 7px;
-  border: 1px solid ${theme.colors.darkGrey};
+  padding: 0.4em 0.5em;
   opacity: 0.7;
+  border-radius: 0;
 
   &:hover {
     background: ${theme.colors.hoverNav};
   }
+`;
+
+export const YearInfo = styled.h4`
+  font-weight: 400;
+  margin: 0 5px;
 `;
 
 export const IconBox = styled.button`
@@ -37,6 +44,12 @@ export const IconBox = styled.button`
   padding: 0.2em 0.4em;
 
   &:hover {
-    background: ${theme.colors.darkGrey};
+    background: ${theme.colors.hoverNav};
   }
+`;
+
+export const SelectMonth = styled.select`
+  border: none;
+  margin: 0 5px;
+  cursor: pointer;
 `;

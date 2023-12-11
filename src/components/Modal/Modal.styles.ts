@@ -42,7 +42,7 @@ export const Title = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0 15px;
-  background: ${theme.colors.lightGray};
+  background: ${theme.colors.bgDefault};
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 `;
@@ -73,45 +73,3 @@ export const Block = styled.div`
   padding: 0 15px;
   text-align: left;
 `;
-
-// @media (min-width: 320px) and (max-width: 480px) {
-// .modal_content.active {
-//     max-width: 100%;
-//     font-size: 14px;
-//     margin: auto;
-//     position: absolute;
-//     top: 70px;
-//     left: 0;
-//     bottom: 0;
-//     right: 0;
-//     width: 300px;
-//   }
-// }
-//
-// @media (min-width: 480px) and (max-width: 768px) {
-// .modal_content.active {
-//     max-width: 100%;
-//     font-size: 15px;
-//     margin: auto;
-//     position: absolute;
-//     top: 70px;
-//     left: 0;
-//     bottom: 0;
-//     right: 0;
-//     width: 400px;
-//   }
-// }
-//
-// @media (min-width: 768px) and (max-width: 992px) {
-// .modal_content.active {
-//     max-width: 100%;
-//     font-size: 16px;
-//     margin: auto;
-//     position: absolute;
-//     top: 70px;
-//     left: 0;
-//     bottom: 0;
-//     right: 0;
-//     width: 500px;
-//   }
-// }

@@ -53,9 +53,16 @@ export const EventItemWrapper = styled.button<{
   padding: 1px 5px;
   opacity: 0.6;
   font-size: 14px;
-  font-weight: 500;
   border: 0.0625rem solid ${theme.colors.whiteDefault};
   border-radius: 0.5rem;
   box-shadow: ${theme.shadows.secondary};
   word-break: break-all;
+  transition: transform 0.7s ease-in-out, filter 0.7s ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+    filter: brightness(125%);
+    border: 0.0625rem solid ${theme.colors.modalConfirm};
+  }
+}
 `;
