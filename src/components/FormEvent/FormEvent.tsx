@@ -17,16 +17,16 @@ import {
   resetForm,
   setEvent,
   setEvents,
-  setMethod,
   setModalActive,
+  setNotificationVisible,
 } from 'store/slices/calendarSlice.ts';
 import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks.ts';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { getRandomColor } from 'helpers/getRandomColor.ts';
 import { IEvent } from 'types/types.ts';
 
-export const FormEvent = () => {
+export const FormEvent: FC = () => {
   const dispatch = useAppDispatch();
 
   const { method, event, events } = useAppSelector(state => state.calendar);
@@ -59,6 +59,7 @@ export const FormEvent = () => {
       };
       localStorage.setItem('events', JSON.stringify([...events, newEvent]));
       dispatch(setEvents([...events, newEvent]));
+      dispatch(setNotificationVisible({ visible: true, type: 'add' }));
     } else {
       const updatedEvents = structuredClone(events);
       updatedEvents[eventIndex] = { ...event, lastUpdatedTime: currentTime };
@@ -84,68 +85,73 @@ export const FormEvent = () => {
     dispatch(setEvents(result));
     localStorage.setItem('events', JSON.stringify(result));
     dispatch(setModalActive(false));
+    dispatch(setNotificationVisible({ visible: true, type: 'remove' }));
   };
 
   return (
-    <form>
-      {method === 'Update' && (
-        <EventStatus>
-          {event.lastUpdatedTime
-            ? `Updated at ${event.lastUpdatedTime}`
-            : `Created at ${event.createdAt}`}
-        </EventStatus>
-      )}
-      <EventTitleWrapper>
-        <EventTitle
-          type="text"
-          placeholder={'Title goes here'}
-          required
-          value={event.title}
-          onChange={({ target }) => eventChangeHandler(target.value, 'title')}
-        />
-        {titleError && <TitleError>{titleError}</TitleError>}
-      </EventTitleWrapper>
-      <EventDescriptionWrapper>
-        <EventDescription
-          placeholder={'Description'}
-          value={event.description}
-          onChange={({ target }) => eventChangeHandler(target.value, 'description')}
-        />
-        {method === 'Update' && <UpdateIcon src={Update} alt="update icon" />}
-      </EventDescriptionWrapper>
-      <EventDate
-        type="date"
-        placeholder={'Date'}
-        required
-        value={event.date}
-        onChange={({ target }) => eventChangeHandler(target.value, 'date')}
-      />
-      <EventTime
-        type="time"
-        value={event.time}
-        placeholder={'Begin time'}
-        onChange={({ target }) => eventChangeHandler(target.value, 'time')}
-      />
-
-      <ActionButtonsWrapper>
+    <>
+      <form>
         {method === 'Update' && (
-          <ActionButton onClick={removeEvent}>
-            <img src={Remove} alt="remove icon" />
-          </ActionButton>
+          <EventStatus>
+            {event.lastUpdatedTime
+              ? `Updated at ${event.lastUpdatedTime}`
+              : `Created at ${event.createdAt}`}
+          </EventStatus>
         )}
+        <EventTitleWrapper>
+          <EventTitle
+            type="text"
+            placeholder={'Title goes here'}
+            required
+            value={event.title}
+            onChange={({ target }) => eventChangeHandler(target.value, 'title')}
+          />
+          {titleError && <TitleError>{titleError}</TitleError>}
+        </EventTitleWrapper>
+        <EventDescriptionWrapper>
+          <EventDescription
+            placeholder={'Description'}
+            value={event.description}
+            onChange={({ target }) => eventChangeHandler(target.value, 'description')}
+          />
+          {method === 'Update' && <UpdateIcon src={Update} alt="update icon" />}
+        </EventDescriptionWrapper>
+        <EventDate
+          type="date"
+          placeholder={'Date'}
+          required
+          value={event.date}
+          onChange={({ target }) => eventChangeHandler(target.value, 'date')}
+        />
+        <EventTime
+          type="time"
+          value={event.time}
+          placeholder={'Begin time'}
+          onChange={({ target }) => eventChangeHandler(target.value, 'time')}
+        />
 
-        <ActionButton
-          disabled={!isFormValid}
-          onClick={e => {
-            e.preventDefault();
-            addEvent();
-            dispatch(setModalActive(false));
-            dispatch(resetForm());
-            dispatch(setMethod(''));
-          }}>
-          SAVE
-        </ActionButton>
-      </ActionButtonsWrapper>
-    </form>
+        <ActionButtonsWrapper>
+          {method === 'Update' && (
+            <ActionButton
+              $removeBtn
+              onClick={() => {
+                removeEvent();
+                dispatch(resetForm());
+              }}>
+              <img src={Remove} alt="remove icon" />
+            </ActionButton>
+          )}
+          <ActionButton
+            disabled={!isFormValid}
+            onClick={e => {
+              e.preventDefault();
+              addEvent();
+              dispatch(resetForm());
+            }}>
+            SAVE
+          </ActionButton>
+        </ActionButtonsWrapper>
+      </form>
+    </>
   );
 };

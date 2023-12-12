@@ -71,9 +71,16 @@ export const ActionButtonsWrapper = styled.div`
   gap: 15px;
 `;
 
-export const ActionButton = styled.button`
+export const ActionButton = styled.button<{ $removeBtn?: boolean }>`
   padding: 0.5em 1em;
   background: ${theme.colors.bgDefault};
+  background: ${({ $removeBtn }) =>
+    $removeBtn ? `${theme.colors.redPrimary}` : `${theme.colors.bgDefault}`};
   height: 40px;
   align-items: center;
+
+  &:hover {
+    background: ${({ $removeBtn }) =>
+    $removeBtn ? `${theme.colors.redSecondary}` : `${theme.colors.headerWrap}`};
+  }
 `;

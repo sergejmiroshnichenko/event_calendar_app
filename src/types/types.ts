@@ -8,3 +8,8 @@ export interface IEvent {
   createdAt?: string;
   lastUpdatedTime?: string | null;
 }
+
+export interface INotificationVisible {
+  visible: boolean;
+  type?: 'add' | 'remove' | null;
+}

@@ -7,7 +7,7 @@ import {
   Title,
 } from './Modal.styles.ts';
 import { FC, ReactNode } from 'react';
-import { resetForm, setMethod, setModalActive } from 'store/slices/calendarSlice.ts';
+import { resetForm } from 'store/slices/calendarSlice.ts';
 import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks.ts';
 
 interface ModalProps {
@@ -24,18 +24,14 @@ export const Modal: FC<ModalProps> = ({ children, title }) => {
     <ModalBackground
       $active={modalActive}
       onClick={() => {
-        dispatch(setModalActive(false));
         dispatch(resetForm());
-        dispatch(setMethod(''));
       }}>
       <ModalContent $active={modalActive} onClick={e => e.stopPropagation()}>
         <Title>
           <Confirmation>{title}</Confirmation>
           <Cross
             onClick={() => {
-              dispatch(setModalActive(false));
               dispatch(resetForm());
-              dispatch(setMethod(''));
             }}>
             &times;
           </Cross>

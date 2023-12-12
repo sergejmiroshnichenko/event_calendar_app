@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/en-gb.js';
-import { IEvent } from 'types/types.ts';
+import { IEvent, INotificationVisible } from 'types/types.ts';
 import { getParsedStoredDate } from 'helpers/calendarDateCalc.ts';
 
 dayjs.locale('en-gb');
@@ -17,6 +17,7 @@ interface ICalendar {
   selectedDate: Dayjs;
   method: string;
   modalActive: boolean;
+  notificationVisible: INotificationVisible;
 }
 
 const initialState: ICalendar = {
@@ -30,6 +31,10 @@ const initialState: ICalendar = {
   selectedDate: parsedStoredDate,
   method: '',
   modalActive: false,
+  notificationVisible: {
+    visible: false,
+    type: null,
+  },
 };
 
 const calendarSlice = createSlice({
@@ -47,6 +52,8 @@ const calendarSlice = createSlice({
     },
     resetForm: state => {
       state.event = initialState.event;
+      state.method = initialState.method;
+      state.modalActive = initialState.modalActive;
     },
     setSelectedDate: (state, action: PayloadAction<Dayjs>) => {
       localStorage.setItem('selectedDate', action.payload.format('MMMM YYYY'));
@@ -58,6 +65,12 @@ const calendarSlice = createSlice({
     setModalActive: (state, action: PayloadAction<boolean>) => {
       state.modalActive = action.payload;
     },
+    setNotificationVisible: (state, action: PayloadAction<INotificationVisible>) => {
+      state.notificationVisible = {
+        ...state.notificationVisible,
+        ...action.payload,
+      };
+    },
   },
 });
 
@@ -68,6 +81,7 @@ export const {
   resetForm,
   setSelectedDate,
   setMethod,
+  setNotificationVisible,
 } = calendarSlice.actions;
 
 export default calendarSlice.reducer;

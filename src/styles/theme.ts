@@ -3,6 +3,8 @@ const theme = {
     greenPrimary: '#21AD36',
     bgDefault: '#F3F4F6',
     success: '#53B862',
+    redPrimary: '#ef5350',
+    redSecondary: '#e53935',
     error: '#E11E25',
     darkGrey: '#9e9e9e',
     whiteDefault: '#FFFFFF',

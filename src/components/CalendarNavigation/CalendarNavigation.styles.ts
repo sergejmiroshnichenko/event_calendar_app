@@ -39,8 +39,7 @@ export const ButtonNavigation = styled.button`
   align-items: center;
   padding: 0;
 
-  &:hover,
-  &:focus {
+  &:hover {
     border-radius: 50%;
     border: 1px solid ${theme.colors.darkGrey};
   }
@@ -51,8 +50,7 @@ export const TodayButton = styled.button`
   padding: 0.5em 1em;
   height: 35px;
 
-  &:hover,
-  &:focus {
+  &:hover {
     background: #d7ccc8;
   }
 `;
