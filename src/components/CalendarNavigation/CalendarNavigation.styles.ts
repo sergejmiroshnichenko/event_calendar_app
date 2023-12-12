@@ -13,8 +13,7 @@ export const ButtonCreate = styled.button`
   background: ${theme.colors.buttonCreate};
   color: ${theme.colors.whiteDefault};
 
-  &:hover,
-  &:focus {
+  &:hover {
     background: ${theme.colors.blueSecondary};
     border: 1px solid ${theme.colors.blueSecondary};
   }

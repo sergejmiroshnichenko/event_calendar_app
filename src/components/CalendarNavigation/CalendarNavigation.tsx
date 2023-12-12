@@ -9,20 +9,16 @@ import {
 } from './CalendarNavigation.styles.ts';
 import { FC } from 'react';
 import { useAppDispatch } from 'hooks/redux-hooks.ts';
-import { setModalActive, setSelectedDate } from 'store/slices/calendarSlice.ts';
+import {
+  setMethod,
+  setModalActive,
+  setSelectedDate,
+} from 'store/slices/calendarSlice.ts';
 import dayjs from 'dayjs';
 import { DatePicker } from 'components/DatePicker/DatePicker.tsx';
 import { getParsedStoredDate, getStoredSelectedDate } from 'helpers/calendarDateCalc.ts';
 
-interface HeaderProps {
-  // openCreate: (methodName: string) => void;
-  // method: string;
-}
-
-export const CalendarNavigation: FC<HeaderProps> = () =>
-// openCreate,
-// method,
-{
+export const CalendarNavigation: FC = () => {
   const dispatch = useAppDispatch();
 
   const storedSelectedDate = getStoredSelectedDate();
@@ -41,9 +37,8 @@ export const CalendarNavigation: FC<HeaderProps> = () =>
       <ButtonCreate
         onClick={() => {
           dispatch(setModalActive(true));
-          // openCreate('Create');
+          dispatch(setMethod('Create'));
         }}>
-        {/*{method}*/}
         <i className="fas fa-plus"></i>
       </ButtonCreate>
 
@@ -51,7 +46,7 @@ export const CalendarNavigation: FC<HeaderProps> = () =>
         <TodayButton
           disabled={dayjs().format('MMMM YYYY') === storedSelectedDate}
           onClick={currentMonthHandler}>
-            Today
+          Today
         </TodayButton>
         <NavigationWrapper>
           <ButtonNavigation onClick={() => handleMonthSwitching(-1)}>

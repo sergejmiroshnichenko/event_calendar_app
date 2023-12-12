@@ -5,8 +5,6 @@ export const GridWrapper = styled.div<{
 }>`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  //width: 968px;
-  //margin: 0 auto;
   background: ${({ $isHeader }) => ($isHeader ? '#efebe9' : '#e3e3e3')};
   gap: 2px;
   padding: ${({ $isHeader }) => ($isHeader ? '' : '1px')};

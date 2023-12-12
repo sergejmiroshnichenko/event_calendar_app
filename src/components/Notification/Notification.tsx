@@ -11,7 +11,7 @@ export const Notification: FC = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       if (notificationVisible) {
-        dispatch(setNotificationVisible({ visible: false }));
+        dispatch(setNotificationVisible({ visible: false, type: null }));
       }
     }, 3000);
 

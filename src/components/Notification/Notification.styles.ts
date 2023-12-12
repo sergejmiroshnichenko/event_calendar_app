@@ -18,7 +18,7 @@ export const Container = styled.div<{ $type: 'add' | 'remove' }>`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  border-radius: 7px;
+  border-radius: 4px;
   padding: 10px;
   color: white;
   font-weight: 500;

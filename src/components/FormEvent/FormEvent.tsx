@@ -25,6 +25,7 @@ import { FC, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { getRandomColor } from 'helpers/getRandomColor.ts';
 import { IEvent } from 'types/types.ts';
+import { fakeUrl, sendRequest } from 'helpers/sendRequest.ts';
 
 export const FormEvent: FC = () => {
   const dispatch = useAppDispatch();
@@ -45,8 +46,9 @@ export const FormEvent: FC = () => {
     }
   }, [event.title, events, titleError]);
 
+  const currentTime = dayjs().format('DD.MM.YYYY HH:mm');
+
   const addEvent = () => {
-    const currentTime = dayjs().format('DD.MM.YYYY HH:mm');
     const eventIndex = events.findIndex(eventElem => eventElem.id === event.id);
 
     if (eventIndex === -1) {
@@ -60,6 +62,24 @@ export const FormEvent: FC = () => {
       localStorage.setItem('events', JSON.stringify([...events, newEvent]));
       dispatch(setEvents([...events, newEvent]));
       dispatch(setNotificationVisible({ visible: true, type: 'add' }));
+
+      if (method === 'Update') {
+        sendRequest(`${fakeUrl}/events/${event.id}`, 'PATCH', event)
+          .then(data => {
+            console.log('Success:', data);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      } else {
+        sendRequest(`${fakeUrl}/events`, 'POST', event)
+          .then(data => {
+            console.log('Success:', data);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      }
     } else {
       const updatedEvents = structuredClone(events);
       updatedEvents[eventIndex] = { ...event, lastUpdatedTime: currentTime };

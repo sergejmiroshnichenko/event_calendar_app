@@ -11,5 +11,5 @@ export interface IEvent {
 
 export interface INotificationVisible {
   visible: boolean;
-  type?: 'add' | 'remove' | null;
+  type: 'add' | 'remove' | null;
 }
