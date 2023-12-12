@@ -1,7 +1,7 @@
 import { styled } from 'styled-components';
 import theme from 'styles/theme.ts';
 
-export const Cells = styled.div<{
+export const Cell = styled.div<{
   $isWeekend?: boolean;
   $isCurrentDay?: boolean;
   $isHeader?: boolean;

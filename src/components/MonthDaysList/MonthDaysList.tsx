@@ -1,19 +1,8 @@
 import {
-  Cells,
-  CurrentDay,
-  DayWrapper,
-  EventItemWrapper,
-  EventListWrapper,
-} from './MonthDaysList.styles.ts';
-import {
   getParsedStoredDate,
-  isCurrentDay,
-  isCurrentMonth,
   isDayContainCurrentEvent,
-  isWeekend,
 } from 'helpers/calendarDateCalc.ts';
-import { truncateText } from 'helpers/truncateText.ts';
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks.ts';
 import { IEvent } from 'types/types.ts';
 import { FC, useEffect, useState } from 'react';
@@ -23,6 +12,7 @@ import {
   setMethod,
   setModalActive,
 } from 'store/slices/calendarSlice.ts';
+import { CalendarCell } from 'components/CalendarCell/CalendarCell.tsx';
 
 export const MonthDaysList: FC = () => {
   const [daysArray, setDaysArray] = useState<Dayjs[]>([]);
@@ -59,32 +49,12 @@ export const MonthDaysList: FC = () => {
   return (
     <>
       {daysArray.map(dayItem => (
-        <Cells
+        <CalendarCell
           key={dayItem.unix()}
-          $isWeekend={isWeekend(dayItem)}
-          $isCurrentDay={isCurrentDay(dayItem)}
-          $isCurrentMonth={isCurrentMonth(dayItem, dayjs())}>
-          <DayWrapper>
-            {isCurrentDay(dayItem) ? (
-              <CurrentDay>{dayItem.format('D')}</CurrentDay>
-            ) : (
-              dayItem.format('D')
-            )}
-          </DayWrapper>
-          <EventListWrapper>
-            {events
-              .filter(event => isDayContainCurrentEvent(event, dayItem))
-              .map(event => (
-                <li key={event.id}>
-                  <EventItemWrapper
-                    $bg={event.background}
-                    onClick={() => openFormHandler('Update', event)}>
-                    {truncateText(event.title, 22)}
-                  </EventItemWrapper>
-                </li>
-              ))}
-          </EventListWrapper>
-        </Cells>
+          dayItem={dayItem}
+          openFormHandler={openFormHandler}
+          events={events.filter(event => isDayContainCurrentEvent(event, dayItem))}
+        />
       ))}
     </>
   );
