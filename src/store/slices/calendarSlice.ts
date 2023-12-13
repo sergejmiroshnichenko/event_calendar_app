@@ -9,8 +9,6 @@ dayjs.locale('en-gb');
 const storedEvents = localStorage.getItem('events');
 const initialEvents = storedEvents ? JSON.parse(storedEvents) : [];
 
-const parsedStoredDate = getParsedStoredDate();
-
 interface ICalendar {
   event: IEvent;
   events: IEvent[];
@@ -28,7 +26,7 @@ const initialState: ICalendar = {
     time: '',
   },
   events: initialEvents,
-  selectedDate: parsedStoredDate,
+  selectedDate: getParsedStoredDate(),
   method: '',
   modalActive: false,
   notificationVisible: {
@@ -65,7 +63,10 @@ const calendarSlice = createSlice({
     setModalActive: (state, action: PayloadAction<boolean>) => {
       state.modalActive = action.payload;
     },
-    setNotificationVisible: (state, action: PayloadAction<INotificationVisible>) => {
+    setNotificationVisible: (
+      state,
+      action: PayloadAction<INotificationVisible>,
+    ) => {
       state.notificationVisible = {
         ...state.notificationVisible,
         ...action.payload,

@@ -16,7 +16,10 @@ import {
 } from 'store/slices/calendarSlice.ts';
 import dayjs from 'dayjs';
 import { DatePicker } from 'components/DatePicker/DatePicker.tsx';
-import { getParsedStoredDate, getStoredSelectedDate } from 'helpers/calendarDateCalc.ts';
+import {
+  getParsedStoredDate,
+  getStoredSelectedDate,
+} from 'helpers/calendarDateCalc.ts';
 
 export const CalendarNavigation: FC = () => {
   const dispatch = useAppDispatch();

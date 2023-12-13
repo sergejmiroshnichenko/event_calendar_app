@@ -7,13 +7,14 @@ export const Cell = styled.div<{
   $isHeader?: boolean;
   $isCurrentMonth?: boolean;
 }>`
-  min-height: ${({ $isHeader }) => ($isHeader ? 24 : 80)}px;
-  border-radius: ${({ $isHeader }) => ($isHeader ? '' : 5)}px;
+  min-height: ${({ $isHeader }) => ($isHeader ? 24 : 85)}px;
+  border-radius: ${({ $isHeader }) => ($isHeader ? '' : '5px')};
   opacity: ${({ $isWeekend }) => $isWeekend && 0.7};
   background: ${({ $isHeader }) => ($isHeader ? '#efebe9' : 'white')};
+  background-color: ${({ $isCurrentDay }) => $isCurrentDay && 'beige'};
   display: flex;
   min-width: 110px;
-  padding: 5px;
+  padding: 4px;
   justify-content: space-between;
   flex-direction: row-reverse;
   color: ${({ $isCurrentMonth }) => ($isCurrentMonth ? 'black' : '#bdbdbd')};
@@ -45,24 +46,36 @@ export const EventListWrapper = styled.ul`
   width: 100%;
 `;
 
-export const EventItemWrapper = styled.button<{
-  $bg: string | undefined;
-}>`
-  background: ${({ $bg }) => $bg};
-  color: ${theme.colors.blackDefault};
-  padding: 1px 5px;
-  opacity: 0.6;
-  font-size: 14px;
+export const eventItemStyles = `
+ color: ${theme.colors.blackDefault};
   border: 0.0625rem solid ${theme.colors.whiteDefault};
   border-radius: 0.5rem;
   box-shadow: ${theme.shadows.secondary};
   word-break: break-all;
   transition: transform 0.7s ease-in-out, filter 0.7s ease-in-out;
-
+  padding: 1px 5px;
+  
   &:hover {
     transform: scale(1.05);
     filter: brightness(125%);
     border: 0.0625rem solid ${theme.colors.modalConfirm};
   }
+`;
+
+export const EventItemWrapper = styled.button<{
+  $bg: string | undefined;
+}>`
+  opacity: 0.6;
+  font-size: 13px;
+  background: ${({ $bg }) => $bg};
+  ${eventItemStyles}
 }
+`;
+
+export const ShowMoreButton = styled.button`
+  ${eventItemStyles};
+  background: ${theme.colors.headerWrap};
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
 `;

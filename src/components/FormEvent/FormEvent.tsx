@@ -22,10 +22,11 @@ import {
 } from 'store/slices/calendarSlice.ts';
 import { useAppDispatch, useAppSelector } from 'hooks/redux-hooks.ts';
 import { FC, useEffect, useState } from 'react';
+import { IEvent } from 'types/types.ts';
 import dayjs from 'dayjs';
 import { getRandomColor } from 'helpers/getRandomColor.ts';
-import { IEvent } from 'types/types.ts';
 import { fakeUrl, sendRequest } from 'helpers/sendRequest.ts';
+import { UPDATE_METHOD } from 'helpers/constants.ts';
 
 export const FormEvent: FC = () => {
   const dispatch = useAppDispatch();
@@ -37,7 +38,9 @@ export const FormEvent: FC = () => {
   const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
-    const isTitleDuplicate = events.some(eventEl => eventEl.title === event.title);
+    const isTitleDuplicate = events.some(
+      eventEl => eventEl.title === event.title,
+    );
 
     if (!event.title || titleError || isTitleDuplicate) {
       setIsFormValid(false);
@@ -63,7 +66,7 @@ export const FormEvent: FC = () => {
       dispatch(setEvents([...events, newEvent]));
       dispatch(setNotificationVisible({ visible: true, type: 'add' }));
 
-      if (method === 'Update') {
+      if (method === UPDATE_METHOD) {
         sendRequest(`${fakeUrl}/events/${event.id}`, 'PATCH', event)
           .then(data => {
             console.log('Success:', data);
@@ -111,7 +114,7 @@ export const FormEvent: FC = () => {
   return (
     <>
       <form>
-        {method === 'Update' && (
+        {method === UPDATE_METHOD && (
           <EventStatus>
             {event.lastUpdatedTime
               ? `Updated at ${event.lastUpdatedTime}`
@@ -132,9 +135,13 @@ export const FormEvent: FC = () => {
           <EventDescription
             placeholder={'Description'}
             value={event.description}
-            onChange={({ target }) => eventChangeHandler(target.value, 'description')}
+            onChange={({ target }) =>
+              eventChangeHandler(target.value, 'description')
+            }
           />
-          {method === 'Update' && <UpdateIcon src={Update} alt="update icon" />}
+          {method === UPDATE_METHOD && (
+            <UpdateIcon src={Update} alt="update icon" />
+          )}
         </EventDescriptionWrapper>
         <EventDate
           type="date"
@@ -151,7 +158,7 @@ export const FormEvent: FC = () => {
         />
 
         <ActionButtonsWrapper>
-          {method === 'Update' && (
+          {method === UPDATE_METHOD && (
             <ActionButton
               $removeBtn
               onClick={() => {

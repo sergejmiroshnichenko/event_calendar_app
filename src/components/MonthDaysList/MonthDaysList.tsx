@@ -26,7 +26,10 @@ export const MonthDaysList: FC = () => {
   const parsedStoredDate = getParsedStoredDate();
 
   useEffect(() => {
-    const startDayOfWeek = parsedStoredDate.clone().startOf('month').startOf('week');
+    const startDayOfWeek = parsedStoredDate
+      .clone()
+      .startOf('month')
+      .startOf('week');
 
     const newValue = Array.from({ length: totalDays }, (_, index) =>
       startDayOfWeek.add(index, 'day'),
@@ -53,7 +56,9 @@ export const MonthDaysList: FC = () => {
           key={dayItem.unix()}
           dayItem={dayItem}
           openFormHandler={openFormHandler}
-          events={events.filter(event => isDayContainCurrentEvent(event, dayItem))}
+          events={events.filter(event =>
+            isDayContainCurrentEvent(event, dayItem),
+          )}
         />
       ))}
     </>
